@@ -1,0 +1,39 @@
+ext {
+    android = [
+            compileSdkVersion: 23,
+            targetSdkVersion : 23,
+            minSdkVersion    : 21,
+            buildToolsVersion: "23.0.2",
+            VERSION_NAME     : "1.0",
+            VERSION_CODE     : 1
+    ]
+    libraryVersion = [
+            "support"           : "23.2.1",
+            "retrofit2"         : "2.0.1",
+            "okhttp3"           : "3.2.0",
+            "leakcanary-android": "1.4-beta2",
+            "rxjava"            : "1.1.3",
+            "butterknife"       : "7.0.1"
+    ]
+    library = [
+            "design"                    : "com.android.support:design:${libraryVersion.support}",
+            "support-v4"                : "com.android.support:support-v4:${libraryVersion.support}",
+            "support-v7"                : "com.android.support:appcompat-v7:${libraryVersion.support}",
+            "recyclerview"              : "com.android.support:recyclerview-v7:${libraryVersion.support}",
+            "cardview"                  : "com.android.support:cardview-v7:${libraryVersion.support}",
+            "percent"                   : "com.android.support:percent:${libraryVersion.support}",
+            "rxjava"                    : "io.reactivex:rxjava:${libraryVersion.rxjava}",
+            "picasso"                   : "com.squareup.picasso:picasso:2.5.2",
+            "rxandroid"                 : "io.reactivex:rxandroid:1.1.0",
+            "butterknife"               : "com.jakewharton:butterknife:${libraryVersion.butterknife}",
+            "okhttp-logging-interceptor": "com.squareup.okhttp3:logging-interceptor:${libraryVersion.okhttp3}",
+            "retrofit"                  : "com.squareup.retrofit2:retrofit:${libraryVersion.retrofit2}",
+            "retrofit-converter-moshi"  : "com.squareup.retrofit2:converter-moshi:${libraryVersion.retrofit2}",
+            "retrofit-rxjava"           : "com.squareup.retrofit2:adapter-rxjava:${libraryVersion.retrofit2}",
+            "eventbus"                  : "org.simple:androideventbus:1.0.5.1",
+            "mysql-connector-java"      : "mysql:mysql-connector-java:5.1.35",
+            "spring-jdbc"               : "org.springframework:spring-jdbc:4.2.5.RELEASE",
+            "commons-dbcp"              : "commons-dbcp:commons-dbcp:1.4",
+            "dagger2"                   : "com.google.dagger:dagger:2.2"
+    ]
+}
