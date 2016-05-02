@@ -2,6 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'realm-android'
 android {
+    dexOptions {
+        incremental true
+        maxProcessCount 4
+        javaMaxHeapSize "2g"
+    }
     compileSdkVersion rootProject.ext.android.compileSdkVersion
     buildToolsVersion rootProject.ext.android.buildToolsVersion
     defaultConfig {

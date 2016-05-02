@@ -1,4 +1,4 @@
-package com.mphantom.mysqlclient.widget;
+package com.mphantom.mysqlclient.widget.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
