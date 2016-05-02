@@ -1,7 +1,7 @@
 package com.mphantom.mysqlclient.mysql;
 
 
-import com.mphantom.mysqlclient.bean.Database;
+import com.mphantom.mysqlclient.model.Database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

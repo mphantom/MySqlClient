@@ -81,4 +81,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         return fragmentArrays.get(key) != null;
     }
 
+    protected void changeFragment(@IdRes int id, Fragment fragment, @Nullable String tag) {
+        hideFragments();
+        if (isFragmentExit(id)) {
+            showFragment(id);
+        } else {
+            addFragment(getReplaceLayoutId(), fragment, id, tag);
+        }
+    }
 }

@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/navigation_home"
+            android:icon="@drawable/ic_subtitles_black_18dp"
+            android:title="@string/home" />
+        <!--android:checked="true"-->
+        <item
             android:id="@+id/navigation_table"
             android:icon="@drawable/ic_subtitles_black_18dp"
             android:title="@string/table" />
@@ -13,5 +18,9 @@
             android:id="@+id/navigation_functions"
             android:icon="@drawable/ic_view_list_black_18dp"
             android:title="@string/functions" />
+        <item
+            android:id="@+id/navigation_setting"
+            android:icon="@drawable/ic_view_list_black_18dp"
+            android:title="@string/setting" />
     </group>
 </menu>

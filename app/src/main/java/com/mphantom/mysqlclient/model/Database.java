@@ -1,4 +1,4 @@
-package com.mphantom.mysqlclient.bean;
+package com.mphantom.mysqlclient.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

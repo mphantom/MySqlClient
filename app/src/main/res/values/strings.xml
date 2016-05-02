@@ -2,9 +2,10 @@
     <string name="app_name">MySqlClient</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="table">table</string>
-    <string name="view">view</string>
-    <string name="functions">functions</string>
+    <string name="table">表</string>
+    <string name="view">视图</string>
+    <string name="functions">方法</string>
+    <string name="setting">设置</string>
+    <string name="home">主页</string>
 </resources>
