@@ -85,4 +85,5 @@ dependencies {
     compile rootProject.ext.library["commons-dbcp"]
     compile rootProject.ext.library["butterknife"]
     compile rootProject.ext.library["dagger2"]
+    compile 'com.android.support:support-v4:23.3.0'
 }

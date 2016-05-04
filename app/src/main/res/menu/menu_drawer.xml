@@ -11,9 +11,9 @@
             android:icon="@drawable/ic_subtitles_black_18dp"
             android:title="@string/table" />
         <item
-            android:id="@+id/navigation_view"
+            android:id="@+id/navigation_ssh"
             android:icon="@drawable/ic_business_black_18dp"
-            android:title="@string/view" />
+            android:title="@string/ssh" />
         <item
             android:id="@+id/navigation_functions"
             android:icon="@drawable/ic_view_list_black_18dp"

@@ -13,42 +13,39 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by wushaorong on 16-5-3.
+ * Created by wushaorong on 16-5-4.
  */
-public class DataBaseAdapter extends RecyclerView.Adapter<DataBaseAdapter.DataBaseViewHolder> implements View.OnClickListener {
+public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder> implements View.OnClickListener {
+
     private final LayoutInflater mLayoutInflater;
     private OnItemClickListener mItemClickListener;
 
-    public DataBaseAdapter(Context context) {
+    public TableAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
     }
 
     @Override
-    public DataBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.adapter_database, parent, false);
+    public TableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mLayoutInflater.inflate(R.layout.adapter_table, parent, false);
         view.setOnClickListener(this);
-        return new DataBaseViewHolder(view);
+        return new TableViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(DataBaseViewHolder holder, int position) {
-        holder.tvHome.setText("testhome");
-        holder.tvName.setText("testname");
+    public void onBindViewHolder(TableViewHolder holder, int position) {
+        holder.tvName.setText("testfortable");
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 10;
     }
 
-
-    public class DataBaseViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_homevalue_dataAdapter)
-        TextView tvHome;
-        @Bind(R.id.tv_namevalue_dataAdapter)
+    public class TableViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.tv_namevalue_tableAdapter)
         TextView tvName;
 
-        public DataBaseViewHolder(View itemView) {
+        public TableViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
