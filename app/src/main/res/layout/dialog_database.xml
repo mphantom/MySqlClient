@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_databaseDalog_nick"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="@string/nick" />
+
+    <EditText
+        android:id="@+id/edit_databaseDialgo_nick"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@id/tv_databaseDalog_nick" />
+
+    <TextView
+        android:id="@+id/tv_databaseDalog_host"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@id/tv_databaseDalog_nick"
+        android:gravity="center"
+        android:text="@string/host" />
+
+    <EditText
+        android:id="@+id/edit_databaseDialgo_host"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/edit_databaseDialgo_nick"
+        android:layout_toRightOf="@id/tv_databaseDalog_host" />
+
+    <TextView
+        android:id="@+id/tv_databaseDalog_port"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@id/tv_databaseDalog_host"
+        android:gravity="center"
+        android:text="@string/port" />
+
+    <EditText
+        android:id="@+id/edit_databaseDialgo_port"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/edit_databaseDialgo_host"
+        android:layout_toRightOf="@id/tv_databaseDalog_port" />
+
+    <TextView
+        android:id="@+id/tv_databaseDalog_table"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@id/tv_databaseDalog_port"
+        android:gravity="center"
+        android:text="@string/table" />
+
+    <EditText
+        android:id="@+id/edit_databaseDialgo_table"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/edit_databaseDialgo_port"
+        android:layout_toRightOf="@id/tv_databaseDalog_table" />
+
+    <Button
+        android:id="@+id/btn_databaseDialog_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_databaseDalog_table"
+        android:text="@string/confirm" />
+</RelativeLayout>

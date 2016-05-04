@@ -8,4 +8,8 @@
     <string name="functions">方法</string>
     <string name="setting">设置</string>
     <string name="home">主页</string>
+    <string name="nick">昵称</string>
+    <string name="confirm">确定</string>
+    <string name="host">主机</string>
+    <string name="port">端口</string>
 </resources>
