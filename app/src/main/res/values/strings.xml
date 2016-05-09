@@ -12,6 +12,9 @@
     <string name="confirm">确定</string>
     <string name="host">主机</string>
     <string name="port">端口</string>
+    <string name="database">数据库</string>
+    <string name="user">用户名</string>
+    <string name="password">密码</string>
     <string name="title_activity_table">TableActivity</string>
     <string name="title_activity_test">TestActivity</string>
 </resources>

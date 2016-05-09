@@ -15,23 +15,25 @@ import butterknife.ButterKnife;
 /**
  * Created by wushaorong on 16-5-3.
  */
-public class DataBaseAdapter extends RecyclerView.Adapter<DataBaseAdapter.DataBaseViewHolder> implements View.OnClickListener {
+public class ConnectionAdapter extends RecyclerView.Adapter<ConnectionAdapter.ConnectionViewHolder> implements View.OnClickListener, View.OnLongClickListener {
     private final LayoutInflater mLayoutInflater;
     private OnItemClickListener mItemClickListener;
+    private OnItemLongClickListener mItemLongClickListener;
 
-    public DataBaseAdapter(Context context) {
+    public ConnectionAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
     }
 
     @Override
-    public DataBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.adapter_database, parent, false);
+    public ConnectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mLayoutInflater.inflate(R.layout.adapter_connection, parent, false);
         view.setOnClickListener(this);
-        return new DataBaseViewHolder(view);
+        view.setOnLongClickListener(this);
+        return new ConnectionViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(DataBaseViewHolder holder, int position) {
+    public void onBindViewHolder(ConnectionViewHolder holder, int position) {
         holder.tvHome.setText("testhome");
         holder.tvName.setText("testname");
     }
@@ -42,13 +44,13 @@ public class DataBaseAdapter extends RecyclerView.Adapter<DataBaseAdapter.DataBa
     }
 
 
-    public class DataBaseViewHolder extends RecyclerView.ViewHolder {
+    public class ConnectionViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.tv_homevalue_dataAdapter)
         TextView tvHome;
         @Bind(R.id.tv_namevalue_dataAdapter)
         TextView tvName;
 
-        public DataBaseViewHolder(View itemView) {
+        public ConnectionViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -58,9 +60,21 @@ public class DataBaseAdapter extends RecyclerView.Adapter<DataBaseAdapter.DataBa
         this.mItemClickListener = listener;
     }
 
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.mItemLongClickListener = listener;
+    }
+
     @Override
     public void onClick(View v) {
         if (mItemClickListener != null)
             mItemClickListener.OnItemClick(v, v.getTag());
     }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (mItemLongClickListener != null)
+            mItemLongClickListener.OnItemLongClick(v, v.getTag());
+        return false;
+    }
+
 }

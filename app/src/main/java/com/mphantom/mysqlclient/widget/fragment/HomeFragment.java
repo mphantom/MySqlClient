@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.mphantom.mysqlclient.R;
-import com.mphantom.mysqlclient.adapter.DataBaseAdapter;
+import com.mphantom.mysqlclient.adapter.ConnectionAdapter;
 import com.mphantom.mysqlclient.core.SqlConnection;
 import com.mphantom.mysqlclient.dialog.DataBaseDialog;
 import com.mphantom.mysqlclient.model.ConnectionInfo;
@@ -45,7 +45,7 @@ public class HomeFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new DataBaseAdapter(context));
+        recyclerView.setAdapter(new ConnectionAdapter(context));
         floatButton.setOnClickListener(v -> {
             DataBaseDialog dialog = new DataBaseDialog();
             dialog.show(getFragmentManager(), "databaseDialg");
