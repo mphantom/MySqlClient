@@ -3,7 +3,7 @@ package com.mphantom.mysqlclient.core;
 import com.mphantom.mysqlclient.model.Database;
 import com.mphantom.mysqlclient.model.Table;
 import com.mphantom.mysqlclient.model.TableProperty;
-import com.mphantom.mysqlclient.mysql.ConnectionInfo;
+import com.mphantom.mysqlclient.model.ConnectionInfo;
 import com.mphantom.mysqlclient.utils.Constant;
 
 import org.apache.commons.dbcp.BasicDataSource;

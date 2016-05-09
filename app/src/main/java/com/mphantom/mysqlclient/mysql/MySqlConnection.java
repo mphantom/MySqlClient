@@ -1,6 +1,7 @@
 package com.mphantom.mysqlclient.mysql;
 
 
+import com.mphantom.mysqlclient.model.ConnectionInfo;
 import com.mphantom.mysqlclient.model.Database;
 
 import java.sql.Connection;

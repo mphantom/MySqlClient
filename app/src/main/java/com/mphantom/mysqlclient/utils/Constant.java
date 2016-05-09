@@ -4,6 +4,13 @@ package com.mphantom.mysqlclient.utils;
  * Created by wushaorong on 16-5-9.
  */
 public class Constant {
+    public static final String DEFAULT_HOST="rm-bp1k96rdj6v2mz8pq.mysql.rds.aliyuncs.com";
+    public static final String DEFAULT_USER="wsr";
+    public static final String DEFAULT_PASSWORD="wsr1117";
+    public static final String DEFAULT_DATABASE="testforme";
+    public static final int DEFAULT_PORT=3306;
+
+
     public static final String CONNECTION_INFO_NAME = "connection_info_name";
     public static final String CONNECTION_INFO = "connection_info";
 
