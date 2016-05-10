@@ -1,12 +1,13 @@
 package com.mphantom.mysqlclient.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by wushaorong on 11/6/15.
  */
-public class ConnectionInfo implements Parcelable {
+public class ConnectionInfo extends RealmObject {
+    @PrimaryKey
     private String name;
     private String host;
     private int port;
@@ -14,43 +15,17 @@ public class ConnectionInfo implements Parcelable {
     private String password;
     private String database;
 
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.name);
-        dest.writeString(this.host);
-        dest.writeInt(this.port);
-        dest.writeString(this.userName);
-        dest.writeString(this.password);
-        dest.writeString(this.database);
-    }
-
     public ConnectionInfo() {
     }
 
-    protected ConnectionInfo(Parcel in) {
-        this.name = in.readString();
-        this.host = in.readString();
-        this.port = in.readInt();
-        this.userName = in.readString();
-        this.password = in.readString();
-        this.database = in.readString();
+    public ConnectionInfo(String name, String host, int port, String userName, String password, String database) {
+        this.name = name;
+        this.host = host;
+        this.port = port;
+        this.userName = userName;
+        this.password = password;
+        this.database = database;
     }
-
-    public static final Parcelable.Creator<ConnectionInfo> CREATOR = new Parcelable.Creator<ConnectionInfo>() {
-        public ConnectionInfo createFromParcel(Parcel source) {
-            return new ConnectionInfo(source);
-        }
-
-        public ConnectionInfo[] newArray(int size) {
-            return new ConnectionInfo[size];
-        }
-    };
 
     public String getName() {
         return name;
@@ -100,12 +75,5 @@ public class ConnectionInfo implements Parcelable {
         this.database = database;
     }
 
-    public ConnectionInfo(String name, String host, int port, String userName, String password, String database) {
-        this.name = name;
-        this.host = host;
-        this.port = port;
-        this.userName = userName;
-        this.password = password;
-        this.database = database;
-    }
+
 }

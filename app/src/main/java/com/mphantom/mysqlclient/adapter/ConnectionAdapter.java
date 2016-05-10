@@ -15,7 +15,8 @@ import butterknife.ButterKnife;
 /**
  * Created by wushaorong on 16-5-3.
  */
-public class ConnectionAdapter extends RecyclerView.Adapter<ConnectionAdapter.ConnectionViewHolder> implements View.OnClickListener, View.OnLongClickListener {
+public class ConnectionAdapter extends RecyclerView.Adapter<ConnectionAdapter.ConnectionViewHolder> implements View.OnClickListener,
+        View.OnLongClickListener ,ItemTouchHelperCallback.ItemTouchHelperAdapter{
     private final LayoutInflater mLayoutInflater;
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
@@ -41,6 +42,16 @@ public class ConnectionAdapter extends RecyclerView.Adapter<ConnectionAdapter.Co
     @Override
     public int getItemCount() {
         return 5;
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        return false;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        
     }
 
 
