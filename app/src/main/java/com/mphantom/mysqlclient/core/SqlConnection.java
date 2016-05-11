@@ -91,7 +91,7 @@ public class SqlConnection {
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
 
         debug(sql, list);
-        List<Database> dblist = new ArrayList<Database>();
+        List<Database> dblist = new ArrayList<>();
         Iterator<Map<String, Object>> it = list.iterator();
         while (it.hasNext()) {
             Map<String, Object> map = it.next();
@@ -106,7 +106,7 @@ public class SqlConnection {
         String sql = "show tables";
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
         debug(sql, list);
-        List<Table> tblist = new ArrayList<Table>();
+        List<Table> tblist = new ArrayList<>();
         Iterator<Map<String, Object>> it = list.iterator();
         while (it.hasNext()) {
             Map<String, Object> map = it.next();
@@ -128,7 +128,7 @@ public class SqlConnection {
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
         debug(sql, list);
 
-        List<TableProperty> tbproplist = new ArrayList<TableProperty>();
+        List<TableProperty> tbproplist = new ArrayList<>();
         Iterator<Map<String, Object>> it = list.iterator();
         while (it.hasNext()) {
             Map<String, Object> map = it.next();
@@ -161,7 +161,7 @@ public class SqlConnection {
 
     public HashMap<String, Object> dosql(String sql) {
         sql = sql.trim();
-        HashMap<String, Object> result = new HashMap<String, Object>();
+        HashMap<String, Object> result = new HashMap<>();
         if (sql.endsWith("\\G") || sql.endsWith("\\g")) {
             sql = sql.substring(0, sql.length() - 2);
         }
@@ -174,7 +174,7 @@ public class SqlConnection {
             List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
             result.put(Constant.QUERY_TYPE, 0);
             if (list == null) {
-                list = new ArrayList<Map<String, Object>>();
+                list = new ArrayList<>();
             }
             result.put(Constant.QUERY_RESULT, list);
         } else {

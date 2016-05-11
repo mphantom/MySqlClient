@@ -6,13 +6,22 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.adapter.TableAdapter;
+import com.mphantom.mysqlclient.core.SqlConnection;
+import com.mphantom.mysqlclient.model.ConnectionInfo;
+import com.mphantom.mysqlclient.utils.Constant;
 import com.mphantom.mysqlclient.widget.activity.TableActivity;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.Bind;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by wushaorong on 16-5-4.
@@ -36,14 +45,26 @@ public class TableFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        TableAdapter adapter = new TableAdapter(context);
-        adapter.setOnItemClickListener((view1, object) -> {
-            Intent intent = new Intent(context, TableActivity.class);
-            context.startActivity(intent);
-        });
-        recyclerView.setAdapter(adapter);
+
         floatButton.setOnClickListener(v -> {
         });
+        Observable.timer(1, TimeUnit.SECONDS)
+                .map(aLong1 -> {
+                    SqlConnection sql = new SqlConnection(new ConnectionInfo("test", Constant.DEFAULT_HOST, Constant.DEFAULT_PORT, Constant.DEFAULT_USER, Constant.DEFAULT_PASSWORD, Constant.DEFAULT_DATABASE));
+                    Log.i("testforme", sql.showTables().toString());
+                    Log.i("testforme", sql.queryItemCount("test") + "");
+                    return sql.showTables();
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(tables -> {
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                    TableAdapter adapter = new TableAdapter(context, tables);
+                    adapter.setOnItemClickListener((view1, object) -> {
+                        Intent intent = new Intent(context, TableActivity.class);
+                        context.startActivity(intent);
+                    });
+                    recyclerView.setAdapter(adapter);
+                });
     }
 }

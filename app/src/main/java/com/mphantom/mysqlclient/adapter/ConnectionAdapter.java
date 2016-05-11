@@ -2,32 +2,33 @@ package com.mphantom.mysqlclient.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mphantom.mysqlclient.R;
+import com.mphantom.mysqlclient.model.ConnectionInfo;
+import com.mphantom.mysqlclient.realm.ConnectionHelper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.RealmResults;
 
 /**
  * Created by wushaorong on 16-5-3.
  */
-public class ConnectionAdapter extends RecyclerView.Adapter<ConnectionAdapter.ConnectionViewHolder> implements View.OnClickListener,
-        View.OnLongClickListener ,ItemTouchHelperCallback.ItemTouchHelperAdapter{
-    private final LayoutInflater mLayoutInflater;
+public class ConnectionAdapter extends AbstractRealmAdapter<ConnectionInfo, ConnectionAdapter.ConnectionViewHolder> implements View.OnClickListener,
+        View.OnLongClickListener, ItemTouchHelperCallback.ItemTouchHelperAdapter {
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
 
     public ConnectionAdapter(Context context) {
-        mLayoutInflater = LayoutInflater.from(context);
+        super(context);
     }
 
     @Override
     public ConnectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.adapter_connection, parent, false);
+        View view = inflater.inflate(R.layout.adapter_connection, parent, false);
         view.setOnClickListener(this);
         view.setOnLongClickListener(this);
         return new ConnectionViewHolder(view);
@@ -35,13 +36,27 @@ public class ConnectionAdapter extends RecyclerView.Adapter<ConnectionAdapter.Co
 
     @Override
     public void onBindViewHolder(ConnectionViewHolder holder, int position) {
-        holder.tvHome.setText("testhome");
-        holder.tvName.setText("testname");
+        ConnectionInfo info = getItem(position);
+        if (info != null) {
+            holder.tvHome.setText(info.getHost() + ":" + info.getPort());
+            holder.tvName.setText(info.getName());
+
+        }
     }
 
     @Override
-    public int getItemCount() {
-        return 5;
+    public boolean hasHeader() {
+        return false;
+    }
+
+    @Override
+    public boolean hasFooter() {
+        return false;
+    }
+
+    @Override
+    protected RealmResults<ConnectionInfo> loadData() {
+        return ConnectionHelper.getInstance().findAllRealmResults();
     }
 
     @Override
@@ -51,7 +66,9 @@ public class ConnectionAdapter extends RecyclerView.Adapter<ConnectionAdapter.Co
 
     @Override
     public void onItemDismiss(int position) {
-        
+        ConnectionInfo info = getItem(position);
+        ConnectionHelper.getInstance().delete(info.getName());
+        notifyDataSetChanged();
     }
 
 

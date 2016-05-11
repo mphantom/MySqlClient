@@ -1,26 +1,24 @@
 package com.mphantom.mysqlclient.dialog;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.model.ConnectionInfo;
 import com.mphantom.mysqlclient.realm.ConnectionHelper;
+import com.mphantom.mysqlclient.utils.Constant;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by wushaorong on 16-5-3.
+ * Created by wushaorong on 16-5-11.
  */
-public class DataBaseDialog extends DialogFragment implements View.OnClickListener {
+public class ConnectionDialog extends Dialog implements View.OnClickListener {
     @Bind(R.id.edit_databaseDialgo_nick)
     EditText edit_nick;
     @Bind(R.id.edit_databaseDialgo_host)
@@ -36,18 +34,21 @@ public class DataBaseDialog extends DialogFragment implements View.OnClickListen
     @Bind(R.id.btn_databaseDialog_confirm)
     Button btn_confirm;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        View view = inflater.inflate(R.layout.dialog_database, container);
-        ButterKnife.bind(this, view);
-        return view;
+    public ConnectionDialog(Context context) {
+        super(context);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_database);
+        ButterKnife.bind(this);
         btn_confirm.setOnClickListener(this);
+        edit_host.setText(Constant.DEFAULT_HOST);
+        edit_port.setText(Constant.DEFAULT_PORT + "");
+        edit_user.setText(Constant.DEFAULT_USER);
+        edit_password.setText(Constant.DEFAULT_PASSWORD);
+        edit_database.setText(Constant.DEFAULT_DATABASE);
     }
 
     @Override

@@ -2,12 +2,16 @@ package com.mphantom.mysqlclient.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mphantom.mysqlclient.R;
+import com.mphantom.mysqlclient.model.Table;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,9 +23,11 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
     private final LayoutInflater mLayoutInflater;
     private OnItemClickListener mItemClickListener;
+    private List<Table> lists;
 
-    public TableAdapter(Context context) {
+    public TableAdapter(Context context, List<Table> lists) {
         mLayoutInflater = LayoutInflater.from(context);
+        this.lists = lists;
     }
 
     @Override
@@ -33,12 +39,12 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
     @Override
     public void onBindViewHolder(TableViewHolder holder, int position) {
-        holder.tvName.setText("testfortable");
+        holder.tvName.setText(lists.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return lists.size();
     }
 
     public class TableViewHolder extends RecyclerView.ViewHolder {

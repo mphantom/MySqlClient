@@ -29,11 +29,6 @@ public abstract class AbstractRealmAdapter<T extends RealmObject, VH extends Rec
         return i;
     }
 
-
-    /**
-     * @param position the position within our adapter inclusive of headers,items and footers
-     * @return an item only if it is not a header or a footer, otherwise returns null
-     */
     public T getItem(int position) {
         if (!mResults.isEmpty()) {
             return mResults.get(position);

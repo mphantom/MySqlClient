@@ -18,7 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="clip_vertical"
-            android:layout_margin="20dp" />
+            android:layout_margin="20dp"
+            android:text="@string/host" />
 
         <TextView
             android:id="@+id/tv_homevalue_dataAdapter"
@@ -32,7 +33,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_home_dataAdapter"
-            android:layout_margin="20dp" />
+            android:layout_margin="20dp"
+            android:text="@string/nick" />
 
         <TextView
             android:id="@+id/tv_namevalue_dataAdapter"
