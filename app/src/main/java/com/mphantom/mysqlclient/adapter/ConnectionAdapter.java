@@ -40,6 +40,7 @@ public class ConnectionAdapter extends AbstractRealmAdapter<ConnectionInfo, Conn
         if (info != null) {
             holder.tvHome.setText(info.getHost() + ":" + info.getPort());
             holder.tvName.setText(info.getName());
+            holder.itemView.setTag(info);
 
         }
     }

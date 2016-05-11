@@ -80,6 +80,7 @@ public class TableProperty {
 
     public String getContent() {
         StringBuilder sb = new StringBuilder();
+        sb.append(field);
         sb.append(type);
         if (!TextUtils.isEmpty(key)) {
             sb.append(", ").append(key);

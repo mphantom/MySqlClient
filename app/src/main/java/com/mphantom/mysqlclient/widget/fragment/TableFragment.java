@@ -6,14 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
+import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.adapter.TableAdapter;
-import com.mphantom.mysqlclient.core.SqlConnection;
-import com.mphantom.mysqlclient.model.ConnectionInfo;
-import com.mphantom.mysqlclient.utils.Constant;
+import com.mphantom.mysqlclient.model.Table;
 import com.mphantom.mysqlclient.widget.activity.TableActivity;
 
 import java.util.concurrent.TimeUnit;
@@ -47,13 +45,11 @@ public class TableFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         floatButton.setOnClickListener(v -> {
+//            startActivity(new Intent(context, TableActivity.class));
         });
         Observable.timer(1, TimeUnit.SECONDS)
                 .map(aLong1 -> {
-                    SqlConnection sql = new SqlConnection(new ConnectionInfo("test", Constant.DEFAULT_HOST, Constant.DEFAULT_PORT, Constant.DEFAULT_USER, Constant.DEFAULT_PASSWORD, Constant.DEFAULT_DATABASE));
-                    Log.i("testforme", sql.showTables().toString());
-                    Log.i("testforme", sql.queryItemCount("test") + "");
-                    return sql.showTables();
+                    return App.getInstance().connectionService.showTables();
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -62,6 +58,7 @@ public class TableFragment extends BaseFragment {
                     TableAdapter adapter = new TableAdapter(context, tables);
                     adapter.setOnItemClickListener((view1, object) -> {
                         Intent intent = new Intent(context, TableActivity.class);
+                        intent.putExtra("tableName", ((Table) object).getName());
                         context.startActivity(intent);
                     });
                     recyclerView.setAdapter(adapter);

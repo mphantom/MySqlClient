@@ -2,7 +2,6 @@ package com.mphantom.mysqlclient.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
     @Override
     public void onBindViewHolder(TableViewHolder holder, int position) {
-        holder.tvName.setText(lists.get(position).getName());
+        Table table = lists.get(position);
+        holder.tvName.setText(table.getName());
+        holder.itemView.setTag(table);
+
     }
 
     @Override

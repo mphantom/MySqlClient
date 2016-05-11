@@ -64,7 +64,6 @@ public class SqlConnection {
     public ConnectionInfo getInfo() {
         return info;
     }
-
     public void setInfo(ConnectionInfo info) {
         this.info = info;
     }
@@ -85,7 +84,6 @@ public class SqlConnection {
     public int hashCode() {
         return super.hashCode();
     }
-
     public List<Database> showDbs() {
         String sql = "show databases";
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
