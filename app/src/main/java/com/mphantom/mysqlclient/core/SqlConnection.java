@@ -140,9 +140,10 @@ public class SqlConnection {
         for (int i = 0; i < list.size(); i++) {
             sb.append(list.get(i).ConvertSql());
         }
-        sb.substring(0, sb.length() - 1);
+        sb.deleteCharAt(sb.length() - 1);
         sb.append(")");
         String sql = sb.toString();
+        Log.i("testforthecreate", sql);
         getJdbcTemplate().execute(sql);
     }
 

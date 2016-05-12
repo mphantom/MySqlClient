@@ -85,4 +85,9 @@ public class ConnectionService extends Service {
         if (sqlConnection != null)
             sqlConnection.deleteTable(tableName);
     }
+
+    public void createTable(String tablename, List<TableProperty> list) {
+        if (sqlConnection != null)
+            sqlConnection.createTable(tablename, list);
+    }
 }

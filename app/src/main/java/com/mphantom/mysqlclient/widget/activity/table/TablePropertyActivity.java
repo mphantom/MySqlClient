@@ -92,12 +92,15 @@ public class TablePropertyActivity extends AppCompatActivity implements View.OnC
                 Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
                         .subscribeOn(Schedulers.io())
                         .doOnNext(integer -> {
-//                            if (newTable)
-//                                App.getInstance().connectionService
+                            if (newTable) {
+                                App.getInstance().connectionService.createTable(edit_tableName.getText().toString(), tablePropertyList);
+                            } else {
+
+                            }
                         })
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(aLong1 -> {
-                            TablePropertyActivity.this.finish();
+                            finish();
                         });
                 break;
             default:

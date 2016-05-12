@@ -81,6 +81,7 @@ public class TableProperty {
     public void setPrimary(boolean flag) {
         if (flag) {
             this.key = "PRI";
+            this._default = null;
         } else {
             this.key = "";
         }
@@ -102,10 +103,12 @@ public class TableProperty {
         StringBuilder sb = new StringBuilder();
         sb.append(field).append(" ");
         sb.append(type).append(" ");
-        if (_default != null)
-            sb.append("Default " + _default).append(" ");
-        if (key != null && key.contains("PRI"))
+
+        if (key != null && key.contains("PRI")) {
             sb.append("PRIMARY KEY").append(" ");
+        } else if (_default != null) {
+            sb.append("Default ").append(_default).append(" ");
+        }
         if (_null != null && _null.equals("NO"))
             sb.append("NOT NULL").append(" ");
         if (extra != null && extra.contains("auto_increment"))

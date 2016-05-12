@@ -51,7 +51,6 @@ public class TableFragment extends BaseFragment {
             Intent intent = new Intent(context, TablePropertyActivity.class);
             intent.putExtra("newTable", true);
             startActivity(intent);
-            startActivity(new Intent(context, TablePropertyActivity.class));
         });
         Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(1))
                 .subscribeOn(Schedulers.io())
