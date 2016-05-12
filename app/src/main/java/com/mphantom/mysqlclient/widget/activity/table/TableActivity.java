@@ -16,7 +16,6 @@ import com.mphantom.mysqlclient.model.TableProperty;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,7 +44,7 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = getIntent();
         tableName = intent.getStringExtra("tableName");
         floatButton.setOnClickListener(this);
-        Observable.timer(1, TimeUnit.SECONDS)
+        Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
                 .subscribeOn(Schedulers.io())
                 .doOnNext(aLong -> {
                     listProperty = App.getInstance().connectionService.schema(tableName);
@@ -54,12 +53,13 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong1 -> {
-
                     recyclerView.setLayoutManager(new LinearLayoutManager(TableActivity.this));
                     DataAdapter adapter = new DataAdapter(TableActivity.this, listProperty, listdata);
                     recyclerView.setAdapter(adapter);
                     adapter.setOnItemClickListener((view1, object) -> {
                         Intent inten = new Intent(TableActivity.this, TableColumnActivity.class);
+                        intent.putExtra("tableName", tableName);
+                        intent.putExtra("newColume", false);
                         TableActivity.this.startActivity(inten);
                     });
                 });
@@ -74,6 +74,9 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(this, TableColumnActivity.class));
+        Intent intent = new Intent(this, TableColumnActivity.class);
+        intent.putExtra("tableName", tableName);
+        intent.putExtra("newColume", true);
+        startActivity(intent);
     }
 }

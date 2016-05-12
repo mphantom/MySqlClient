@@ -90,4 +90,9 @@ public class ConnectionService extends Service {
         if (sqlConnection != null)
             sqlConnection.createTable(tablename, list);
     }
+
+    public void insertInto(String sql) {
+        if (sqlConnection != null)
+            sqlConnection.insertInto(sql);
+    }
 }

@@ -143,13 +143,16 @@ public class SqlConnection {
         sb.deleteCharAt(sb.length() - 1);
         sb.append(")");
         String sql = sb.toString();
-        Log.i("testforthecreate", sql);
         getJdbcTemplate().execute(sql);
     }
 
     public void deleteTable(String tableName) {
 //        String sql = "DROP TABLE " + tableName;
 //        getJdbcTemplate().execute(sql);
+    }
+
+    public void insertInto(String sql) {
+        getJdbcTemplate().execute(sql);
     }
 
     public List<TableProperty> schema(String tablename) {

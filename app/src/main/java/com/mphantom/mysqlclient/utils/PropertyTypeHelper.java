@@ -19,6 +19,9 @@ public class PropertyTypeHelper {
             "date", "time", "datetime", "timestamp"};
 
     public static int checkPropertyType(String type) {
+        if (type.contains("(")) {
+            type = type.substring(0, type.indexOf("("));
+        }
         if (Arrays.asList(NUMBERS).contains(type.toLowerCase())) {
             return TYPE_NUMBER;
         }
