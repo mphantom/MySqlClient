@@ -41,6 +41,8 @@
             android:name=".service.ConnectionService"
             android:enabled="true"
             android:exported="true" />
+
+        <activity android:name=".widget.activity.TableColumnActivity"></activity>
     </application>
 
 </manifest>

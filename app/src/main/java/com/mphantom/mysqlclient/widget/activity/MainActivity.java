@@ -6,6 +6,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.Toolbar;
 
 import com.mphantom.mysqlclient.R;
+import com.mphantom.mysqlclient.widget.fragment.ConsoleFragment;
+import com.mphantom.mysqlclient.widget.fragment.FunctionFragment;
 import com.mphantom.mysqlclient.widget.fragment.HomeFragment;
 import com.mphantom.mysqlclient.widget.fragment.SshFragment;
 import com.mphantom.mysqlclient.widget.fragment.TableFragment;
@@ -21,6 +23,7 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.toolbar_mainA)
     Toolbar toolbar;
     private int currentIndex;
+    private CharSequence title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,31 +34,58 @@ public class MainActivity extends BaseActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     item.setChecked(true);
-                    toolbar.setTitle(item.getTitle());
+                    title = item.getTitle();
+                    toolbar.setTitle(title);
                     currentIndex = item.getItemId();
                     changeFragment(item.getItemId(), new HomeFragment(), "HomeFragment");
                     drawerLayout.closeDrawers();
                     return true;
                 case R.id.navigation_table:
                     item.setChecked(true);
-                    toolbar.setTitle(item.getTitle());
+                    title = item.getTitle();
+                    toolbar.setTitle(title);
                     currentIndex = item.getItemId();
                     changeFragment(item.getItemId(), new TableFragment(), "TableFragment");
                     drawerLayout.closeDrawers();
                     return true;
+                case R.id.navigation_consule:
+                    item.setChecked(true);
+                    title = item.getTitle();
+                    toolbar.setTitle(title);
+                    currentIndex = item.getItemId();
+                    changeFragment(item.getItemId(), new ConsoleFragment(), "ConsoleFragment");
+                    drawerLayout.closeDrawers();
+                    return true;
                 case R.id.navigation_ssh:
                     item.setChecked(true);
-                    toolbar.setTitle(item.getTitle());
+                    title = item.getTitle();
+                    toolbar.setTitle(title);
                     currentIndex = item.getItemId();
                     changeFragment(item.getItemId(), new SshFragment(), "SshFragment");
                     drawerLayout.closeDrawers();
                     return true;
                 case R.id.navigation_functions:
+                    item.setChecked(true);
+                    title = item.getTitle();
+                    toolbar.setTitle(title);
+                    currentIndex = item.getItemId();
+                    changeFragment(item.getItemId(), new FunctionFragment(), "FunctionFragment");
+                    drawerLayout.closeDrawers();
+                    return true;
                 case R.id.navigation_setting:
                 default:
                     return false;
             }
         });
+        currentIndex = R.id.navigation_home;
+        changeFragment(R.id.navigation_home, new HomeFragment(), "HomeFragment");
+        title = getString(R.string.home);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        toolbar.setTitle(title);
     }
 
     @Override

@@ -47,26 +47,37 @@ public class ConnectionService extends Service {
     }
 
     public List<Table> showTables() {
-        return sqlConnection.showTables();
+        if (sqlConnection != null)
+            return sqlConnection.showTables();
+        return null;
     }
 
     public void useDb(String dbname) {
-        sqlConnection.useDb(dbname);
+        if (sqlConnection != null)
+            sqlConnection.useDb(dbname);
     }
 
     public List<TableProperty> schema(String tablename) {
-        return sqlConnection.schema(tablename);
+        if (sqlConnection != null)
+            return sqlConnection.schema(tablename);
+        return null;
     }
 
     public List<Map<String, Object>> queryAll(String tablename, int page, int pagesize) {
-        return sqlConnection.queryAll(tablename, page, pagesize);
+        if (sqlConnection != null)
+            return sqlConnection.queryAll(tablename, page, pagesize);
+        return null;
     }
 
     public int queryItemCount(String tablename) {
-        return sqlConnection.queryItemCount(tablename);
+        if (sqlConnection != null)
+            return sqlConnection.queryItemCount(tablename);
+        return -1;
     }
 
     public HashMap<String, Object> dosql(String sql) {
-        return sqlConnection.dosql(sql);
+        if (sqlConnection != null)
+            return sqlConnection.dosql(sql);
+        return null;
     }
 }

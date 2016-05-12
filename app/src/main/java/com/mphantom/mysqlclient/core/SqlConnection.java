@@ -1,9 +1,12 @@
 package com.mphantom.mysqlclient.core;
 
+import android.util.Log;
+
 import com.mphantom.mysqlclient.model.Database;
 import com.mphantom.mysqlclient.model.Table;
 import com.mphantom.mysqlclient.model.TableProperty;
 import com.mphantom.mysqlclient.model.ConnectionInfo;
+import com.mphantom.mysqlclient.model.Trigger;
 import com.mphantom.mysqlclient.utils.Constant;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -64,6 +67,7 @@ public class SqlConnection {
     public ConnectionInfo getInfo() {
         return info;
     }
+
     public void setInfo(ConnectionInfo info) {
         this.info = info;
     }
@@ -84,6 +88,7 @@ public class SqlConnection {
     public int hashCode() {
         return super.hashCode();
     }
+
     public List<Database> showDbs() {
         String sql = "show databases";
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
@@ -98,6 +103,12 @@ public class SqlConnection {
             dblist.add(db);
         }
         return dblist;
+    }
+
+    public void useDb(String dbname) {
+        String sql = "use " + dbname;
+        jdbcTemplate.execute(sql);
+        debug(sql);
     }
 
     public List<Table> showTables() {
@@ -115,10 +126,12 @@ public class SqlConnection {
         return tblist;
     }
 
-    public void useDb(String dbname) {
-        String sql = "use " + dbname;
-        jdbcTemplate.execute(sql);
-        debug(sql);
+    public List<Trigger> showTriggers() {
+        String sql = "show triggers";
+        List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
+        debug(sql, list);
+        List<Trigger> triggers = new ArrayList<>();
+        return triggers;
     }
 
     public List<TableProperty> schema(String tablename) {
@@ -146,7 +159,6 @@ public class SqlConnection {
         int offset = (page - 1) * pagesize;
         String sql = "select * from " + tablename + " limit " + pagesize + " offset " + offset;
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
-
         debug(sql, list);
         return list;
     }
@@ -192,12 +204,12 @@ public class SqlConnection {
     private void debug(String sql, List<Map<String, Object>> list) {
         for (Map<String, Object> map : list) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
-                System.out.println(entry.getKey() + "-->" + entry.getValue());
+                Log.d("clientDebug", entry.getKey() + "-->" + entry.getValue());
             }
         }
     }
 
     private void debug(String sql) {
-        System.out.println(sql);
+        Log.d("clientDebug", "sql" + "-->" + sql);
     }
 }

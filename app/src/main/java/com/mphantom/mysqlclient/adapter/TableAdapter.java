@@ -18,10 +18,12 @@ import butterknife.ButterKnife;
 /**
  * Created by wushaorong on 16-5-4.
  */
-public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder> implements View.OnClickListener {
+public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder>
+        implements View.OnClickListener, View.OnLongClickListener {
 
     private final LayoutInflater mLayoutInflater;
     private OnItemClickListener mItemClickListener;
+    private OnItemLongClickListener mItemLongClickListener;
     private List<Table> lists;
 
     public TableAdapter(Context context, List<Table> lists) {
@@ -33,6 +35,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     public TableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mLayoutInflater.inflate(R.layout.adapter_table, parent, false);
         view.setOnClickListener(this);
+        view.setOnLongClickListener(this);
         return new TableViewHolder(view);
     }
 
@@ -49,6 +52,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         return lists.size();
     }
 
+
     public class TableViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.tv_namevalue_tableAdapter)
         TextView tvName;
@@ -63,9 +67,20 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
         this.mItemClickListener = listener;
     }
 
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.mItemLongClickListener = listener;
+    }
+
     @Override
     public void onClick(View v) {
         if (mItemClickListener != null)
             mItemClickListener.OnItemClick(v, v.getTag());
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (mItemLongClickListener != null)
+            mItemLongClickListener.OnItemLongClick(v, v.getTag());
+        return false;
     }
 }

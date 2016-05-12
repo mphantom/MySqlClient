@@ -48,9 +48,7 @@ public class TableFragment extends BaseFragment {
 //            startActivity(new Intent(context, TableActivity.class));
         });
         Observable.timer(1, TimeUnit.SECONDS)
-                .map(aLong1 -> {
-                    return App.getInstance().connectionService.showTables();
-                })
+                .map(aLong1 -> App.getInstance().connectionService.showTables())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tables -> {

@@ -7,16 +7,25 @@
 
     <TextView
         android:id="@+id/tv_param1_dataAdapter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp" />
 
     <TextView
         android:id="@+id/tv_param2_dataAdapter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp" />
 
     <TextView
         android:id="@+id/tv_param3_dataAdapter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:id="@+id/tv_param4_dataAdapter"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp" />
 </LinearLayout>

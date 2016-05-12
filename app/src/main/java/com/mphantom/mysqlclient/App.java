@@ -5,9 +5,11 @@ import android.content.Intent;
 
 import com.mphantom.mysqlclient.core.SqlConnection;
 import com.mphantom.mysqlclient.model.ConnectionInfo;
+import com.mphantom.mysqlclient.model.TableProperty;
 import com.mphantom.mysqlclient.service.ConnectionService;
 import com.mphantom.mysqlclient.utils.Constant;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -20,6 +22,7 @@ public class App extends Application {
     private static App instance;
     public ConnectionService connectionService;
     public ConnectionInfo connectionInfo;
+    public List<TableProperty> tablePropertyList;
 
     public static App getInstance() {
         return instance;
@@ -30,7 +33,7 @@ public class App extends Application {
         super.onCreate();
         instance = this;
         startService(new Intent(this, ConnectionService.class));
-        Observable.timer(1, TimeUnit.SECONDS)
+        Observable.timer(2, TimeUnit.SECONDS)
                 .observeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .subscribe(aLong -> {
@@ -38,7 +41,7 @@ public class App extends Application {
                             new ConnectionInfo("test", Constant.DEFAULT_HOST,
                                     Constant.DEFAULT_PORT, Constant.DEFAULT_USER,
                                     Constant.DEFAULT_PASSWORD, Constant.DEFAULT_DATABASE)));
-                });
+                }, Throwable::printStackTrace);
     }
 
     public void setConnectionInfo(ConnectionInfo connectionInfo) {

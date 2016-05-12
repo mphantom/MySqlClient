@@ -3,9 +3,9 @@
     <string name="action_settings">Settings</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="table">表名</string>
+    <string name="table">数据表</string>
     <string name="ssh">ssh连接</string>
-    <string name="functions">方法</string>
+    <string name="functions">触发器</string>
     <string name="setting">设置</string>
     <string name="home">主页</string>
     <string name="nick">昵称</string>
@@ -17,4 +17,6 @@
     <string name="password">密码</string>
     <string name="title_activity_table">TableActivity</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="consule">控制台</string>
+    <string name="submit">提交</string>
 </resources>
