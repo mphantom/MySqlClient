@@ -1,4 +1,4 @@
-package com.mphantom.mysqlclient.widget.activity;
+package com.mphantom.mysqlclient.widget.activity.table;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;

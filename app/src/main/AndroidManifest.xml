@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".widget.activity.TableActivity"
+            android:name=".widget.activity.table.TableActivity"
             android:label="@string/title_activity_table"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -42,7 +42,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".widget.activity.TableColumnActivity"></activity>
+        <activity android:name=".widget.activity.table.TableColumnActivity" />
+        <activity android:name=".widget.activity.table.TablePropertyActivity" />
     </application>
 
 </manifest>

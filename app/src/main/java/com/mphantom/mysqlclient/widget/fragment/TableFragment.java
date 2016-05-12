@@ -12,7 +12,8 @@ import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.adapter.TableAdapter;
 import com.mphantom.mysqlclient.model.Table;
-import com.mphantom.mysqlclient.widget.activity.TableActivity;
+import com.mphantom.mysqlclient.widget.activity.table.TableActivity;
+import com.mphantom.mysqlclient.widget.activity.table.TablePropertyActivity;
 
 import java.util.concurrent.TimeUnit;
 
@@ -57,6 +58,11 @@ public class TableFragment extends BaseFragment {
                     adapter.setOnItemClickListener((view1, object) -> {
                         Intent intent = new Intent(context, TableActivity.class);
                         intent.putExtra("tableName", ((Table) object).getName());
+                        context.startActivity(intent);
+                    });
+                    adapter.setOnItemLongClickListener((view2, object1) -> {
+                        Intent intent = new Intent(context, TablePropertyActivity.class);
+                        intent.putExtra("tableName", ((Table) object1).getName());
                         context.startActivity(intent);
                     });
                     recyclerView.setAdapter(adapter);

@@ -3,9 +3,12 @@ package com.mphantom.mysqlclient.widget.activity;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.mphantom.mysqlclient.R;
+import com.mphantom.mysqlclient.utils.Constant;
 import com.mphantom.mysqlclient.widget.fragment.ConsoleFragment;
 import com.mphantom.mysqlclient.widget.fragment.FunctionFragment;
 import com.mphantom.mysqlclient.widget.fragment.HomeFragment;
@@ -22,6 +25,10 @@ public class MainActivity extends BaseActivity {
     DrawerLayout drawerLayout;
     @Bind(R.id.toolbar_mainA)
     Toolbar toolbar;
+    View headView;
+    TextView tv_hostInfo;
+    TextView tv_nick;
+
     private int currentIndex;
     private CharSequence title;
 
@@ -80,6 +87,11 @@ public class MainActivity extends BaseActivity {
         currentIndex = R.id.navigation_home;
         changeFragment(R.id.navigation_home, new HomeFragment(), "HomeFragment");
         title = getString(R.string.home);
+        headView=navigationView.getHeaderView(0);
+        tv_hostInfo= (TextView) headView.findViewById(R.id.tv_hostinfo_mainA);
+        tv_nick= (TextView) headView.findViewById(R.id.tv_nick_mainA);
+        tv_hostInfo.setText(Constant.DEFAULT_HOST);
+        tv_nick.setText("BOB");
     }
 
     @Override

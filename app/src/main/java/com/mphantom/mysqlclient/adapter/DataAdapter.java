@@ -69,6 +69,17 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
         return lists.size() + 1;
     }
 
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mItemClickListener = listener;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (mItemClickListener != null)
+            mItemClickListener.OnItemClick(v, v.getTag());
+    }
+
     public class DataViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.tv_param1_dataAdapter)
         TextView tvParam1;
@@ -89,15 +100,5 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
             tv_list.add(tvParam3);
             tv_list.add(tvParam4);
         }
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mItemClickListener = listener;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (mItemClickListener != null)
-            mItemClickListener.OnItemClick(v, v.getTag());
     }
 }

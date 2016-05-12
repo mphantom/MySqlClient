@@ -4,6 +4,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="table">数据表</string>
+    <string name="tablename">表名</string>
     <string name="ssh">ssh连接</string>
     <string name="functions">触发器</string>
     <string name="setting">设置</string>
