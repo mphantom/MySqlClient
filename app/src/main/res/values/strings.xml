@@ -20,4 +20,10 @@
     <string name="title_activity_test">TestActivity</string>
     <string name="consule">控制台</string>
     <string name="submit">提交</string>
+    <string name="file">字段名</string>
+    <string name="type">类型</string>
+    <string name="default_value">缺省值</string>
+    <string name="primary_key">主键</string>
+    <string name="auto_increment">自增</string>
+    <string name="not_null">不可为空</string>
 </resources>

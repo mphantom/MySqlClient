@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.adapter.TablePropertyAdapter;
+import com.mphantom.mysqlclient.dialog.TablePropertyDialog;
 import com.mphantom.mysqlclient.model.TableProperty;
 
 import java.util.List;
@@ -77,6 +78,8 @@ public class TablePropertyActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.float_tablePropertyA:
+                TablePropertyDialog dialog=new TablePropertyDialog(this);
+                dialog.show();
                 break;
             case R.id.btn_confirm_tablePropertyA:
                 break;
