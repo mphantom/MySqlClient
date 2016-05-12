@@ -134,7 +134,21 @@ public class SqlConnection {
     }
 
     public void createTable(String tablename, List<TableProperty> list) {
-        String sql = "CREATE TABLE";
+        StringBuilder sb = new StringBuilder();
+        sb.append("CREATE TABLE").append(" ");
+        sb.append(tablename).append(" (");
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i).ConvertSql());
+        }
+        sb.substring(0, sb.length() - 1);
+        sb.append(")");
+        String sql = sb.toString();
+        getJdbcTemplate().execute(sql);
+    }
+
+    public void deleteTable(String tableName) {
+//        String sql = "DROP TABLE " + tableName;
+//        getJdbcTemplate().execute(sql);
     }
 
     public List<TableProperty> schema(String tablename) {

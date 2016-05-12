@@ -80,4 +80,9 @@ public class ConnectionService extends Service {
             return sqlConnection.dosql(sql);
         return null;
     }
+
+    public void deleteTable(String tableName) {
+        if (sqlConnection != null)
+            sqlConnection.deleteTable(tableName);
+    }
 }

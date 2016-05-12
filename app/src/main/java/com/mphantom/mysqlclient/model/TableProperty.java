@@ -78,16 +78,24 @@ public class TableProperty {
         return field;
     }
 
-    public void setPrimary() {
-        this.key = "PRI";
+    public void setPrimary(boolean flag) {
+        if (flag) {
+            this.key = "PRI";
+        } else {
+            this.key = "";
+        }
     }
 
     public void setNullable(boolean flag) {
         _null = flag ? "YES" : "NO";
     }
 
-    public void setAutoIncrement() {
-        extra = "auto_increment";
+    public void setAutoIncrement(boolean flag) {
+        if (flag) {
+            extra = "auto_increment";
+        } else {
+            extra = "";
+        }
     }
 
     public String ConvertSql() {

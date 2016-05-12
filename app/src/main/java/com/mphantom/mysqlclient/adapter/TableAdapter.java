@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.model.Table;
 
@@ -14,12 +15,15 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by wushaorong on 16-5-4.
  */
 public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHolder>
-        implements View.OnClickListener, View.OnLongClickListener {
+        implements View.OnClickListener, View.OnLongClickListener, ItemTouchHelperCallback.ItemTouchHelperAdapter {
 
     private final LayoutInflater mLayoutInflater;
     private OnItemClickListener mItemClickListener;
@@ -50,6 +54,22 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
     @Override
     public int getItemCount() {
         return lists.size();
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        return false;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(position)).subscribeOn(Schedulers.io())
+                .doOnNext(integer -> App.getInstance().connectionService.deleteTable(lists.get(integer).getName())).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer1 -> {
+                    lists.remove(position);
+                    notifyDataSetChanged();
+                });
+
     }
 
 

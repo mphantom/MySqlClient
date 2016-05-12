@@ -87,9 +87,9 @@ public class MainActivity extends BaseActivity {
         currentIndex = R.id.navigation_home;
         changeFragment(R.id.navigation_home, new HomeFragment(), "HomeFragment");
         title = getString(R.string.home);
-        headView=navigationView.getHeaderView(0);
-        tv_hostInfo= (TextView) headView.findViewById(R.id.tv_hostinfo_mainA);
-        tv_nick= (TextView) headView.findViewById(R.id.tv_nick_mainA);
+        headView = navigationView.getHeaderView(0);
+        tv_hostInfo = (TextView) headView.findViewById(R.id.tv_hostinfo_mainA);
+        tv_nick = (TextView) headView.findViewById(R.id.tv_nick_mainA);
         tv_hostInfo.setText(Constant.DEFAULT_HOST);
         tv_nick.setText("BOB");
     }

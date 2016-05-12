@@ -14,7 +14,6 @@ public abstract class AbstractRealmAdapter<T extends RealmObject, VH extends Rec
         extends RecyclerView.Adapter<VH> {
     protected LayoutInflater inflater;
     protected Context context;
-    //Our data source
     protected RealmResults<T> mResults;
 
     protected AbstractRealmAdapter(Context context) {

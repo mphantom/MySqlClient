@@ -6,16 +6,16 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
+import com.mphantom.mysqlclient.adapter.ItemTouchHelperCallback;
 import com.mphantom.mysqlclient.adapter.TableAdapter;
 import com.mphantom.mysqlclient.model.Table;
 import com.mphantom.mysqlclient.widget.activity.table.TableActivity;
 import com.mphantom.mysqlclient.widget.activity.table.TablePropertyActivity;
-
-import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import rx.Observable;
@@ -30,6 +30,8 @@ public class TableFragment extends BaseFragment {
     RecyclerView recyclerView;
     @Bind(R.id.float_tableF)
     FloatingActionButton floatButton;
+
+    private ItemTouchHelper mItemTouchHelper;
 
     @Override
     protected int getLayoutId() {
@@ -46,11 +48,14 @@ public class TableFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         floatButton.setOnClickListener(v -> {
+            Intent intent = new Intent(context, TablePropertyActivity.class);
+            intent.putExtra("newTable", true);
+            startActivity(intent);
             startActivity(new Intent(context, TablePropertyActivity.class));
         });
-        Observable.timer(1, TimeUnit.SECONDS)
-                .map(aLong1 -> App.getInstance().connectionService.showTables())
+        Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(1))
                 .subscribeOn(Schedulers.io())
+                .map(aLong1 -> App.getInstance().connectionService.showTables())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tables -> {
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -63,9 +68,12 @@ public class TableFragment extends BaseFragment {
                     adapter.setOnItemLongClickListener((view2, object1) -> {
                         Intent intent = new Intent(context, TablePropertyActivity.class);
                         intent.putExtra("tableName", ((Table) object1).getName());
+                        intent.putExtra("newTable", false);
                         context.startActivity(intent);
                     });
                     recyclerView.setAdapter(adapter);
+                    mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
+                    mItemTouchHelper.attachToRecyclerView(recyclerView);
                 });
     }
 }

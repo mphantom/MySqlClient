@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 
 import com.mphantom.mysqlclient.R;
@@ -14,16 +13,10 @@ import com.mphantom.mysqlclient.adapter.ConnectionAdapter;
 import com.mphantom.mysqlclient.adapter.ItemTouchHelperCallback;
 import com.mphantom.mysqlclient.adapter.OnItemClickListener;
 import com.mphantom.mysqlclient.adapter.OnItemLongClickListener;
-import com.mphantom.mysqlclient.core.SqlConnection;
 import com.mphantom.mysqlclient.dialog.ConnectionDialog;
 import com.mphantom.mysqlclient.model.ConnectionInfo;
-import com.mphantom.mysqlclient.utils.Constant;
-
-import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
-import rx.Observable;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by wushaorong on 16-5-2.
@@ -71,6 +64,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
 
     @Override
     public void OnItemLongClick(View view, Object object) {
-
+        ConnectionDialog dialog = new ConnectionDialog(context);
+        dialog.setConnectionInfo((ConnectionInfo) object);
+        dialog.show();
     }
 }

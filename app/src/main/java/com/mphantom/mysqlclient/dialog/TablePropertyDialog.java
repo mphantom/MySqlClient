@@ -9,6 +9,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.mphantom.mysqlclient.R;
+import com.mphantom.mysqlclient.model.TableProperty;
+import com.mphantom.mysqlclient.utils.OnConfirm;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,6 +34,7 @@ public class TablePropertyDialog extends Dialog implements View.OnClickListener 
     @Bind(R.id.btn_tablePropertyDialog_confirm)
     Button btn_confirm;
 
+    private OnConfirm onConfirm;
 
     public TablePropertyDialog(Context context) {
         super(context);
@@ -47,7 +50,22 @@ public class TablePropertyDialog extends Dialog implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-
+        TableProperty tableProperty = new TableProperty();
+        tableProperty.setField(edit_file.getText().toString().trim());
+        tableProperty.setType(edit_type.getText().toString().trim());
+        tableProperty.set_default(edit_default.getText().toString().trim());
+        if (check_primaryKey.isChecked())
+            tableProperty.setPrimary(true);
+        if (check_autoInc.isChecked())
+            tableProperty.setAutoIncrement(true);
+        tableProperty.setNullable(!check_notNull.isChecked());
+        if (onConfirm != null)
+            onConfirm.OnButtonConfirm(tableProperty);
         this.dismiss();
     }
+
+    public void setOnConfirm(OnConfirm confirm) {
+        this.onConfirm = confirm;
+    }
+
 }

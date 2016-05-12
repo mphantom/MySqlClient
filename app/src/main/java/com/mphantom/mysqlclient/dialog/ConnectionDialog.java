@@ -34,6 +34,8 @@ public class ConnectionDialog extends Dialog implements View.OnClickListener {
     @Bind(R.id.btn_databaseDialog_confirm)
     Button btn_confirm;
 
+    private ConnectionInfo connectionInfo;
+
     public ConnectionDialog(Context context) {
         super(context);
     }
@@ -44,11 +46,20 @@ public class ConnectionDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.dialog_database);
         ButterKnife.bind(this);
         btn_confirm.setOnClickListener(this);
-        edit_host.setText(Constant.DEFAULT_HOST);
-        edit_port.setText(Constant.DEFAULT_PORT + "");
-        edit_user.setText(Constant.DEFAULT_USER);
-        edit_password.setText(Constant.DEFAULT_PASSWORD);
-        edit_database.setText(Constant.DEFAULT_DATABASE);
+        if (connectionInfo == null) {
+            edit_host.setText(Constant.DEFAULT_HOST);
+            edit_port.setText(Constant.DEFAULT_PORT + "");
+            edit_user.setText(Constant.DEFAULT_USER);
+            edit_password.setText(Constant.DEFAULT_PASSWORD);
+            edit_database.setText(Constant.DEFAULT_DATABASE);
+        } else {
+            edit_nick.setText(connectionInfo.getName());
+            edit_host.setText(connectionInfo.getHost());
+            edit_port.setText(connectionInfo.getPort() + "");
+            edit_user.setText(connectionInfo.getUserName());
+            edit_password.setText(connectionInfo.getPassword());
+            edit_database.setText(connectionInfo.getDatabase());
+        }
     }
 
     @Override
@@ -62,5 +73,9 @@ public class ConnectionDialog extends Dialog implements View.OnClickListener {
         info.setPassword(edit_password.getText().toString());
         ConnectionHelper.getInstance().insert(info);
         this.dismiss();
+    }
+
+    public void setConnectionInfo(ConnectionInfo info) {
+        this.connectionInfo = info;
     }
 }
