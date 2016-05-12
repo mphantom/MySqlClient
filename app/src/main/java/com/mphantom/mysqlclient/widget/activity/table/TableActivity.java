@@ -7,11 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.adapter.DataAdapter;
+import com.mphantom.mysqlclient.adapter.ItemTouchHelperCallback;
 import com.mphantom.mysqlclient.model.TableProperty;
 
 import java.util.List;
@@ -34,6 +36,7 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
     private List<TableProperty> listProperty;
     private List<Map<String, Object>> listdata;
     private String tableName;
+    private ItemTouchHelper mItemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +63,10 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
                         Intent inten = new Intent(TableActivity.this, TableColumnActivity.class);
                         intent.putExtra("tableName", tableName);
                         intent.putExtra("newColume", false);
-                        TableActivity.this.startActivity(inten);
+                        startActivity(inten);
                     });
+                    mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
+                    mItemTouchHelper.attachToRecyclerView(recyclerView);
                 });
 
     }

@@ -20,7 +20,8 @@ import butterknife.ButterKnife;
 /**
  * Created by wushaorong on 16-5-12.
  */
-public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder> implements View.OnClickListener {
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder>
+        implements View.OnClickListener, ItemTouchHelperCallback.ItemTouchHelperAdapter {
 
     private final LayoutInflater mLayoutInflater;
     private OnItemClickListener mItemClickListener;
@@ -78,6 +79,22 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
     public void onClick(View v) {
         if (mItemClickListener != null)
             mItemClickListener.OnItemClick(v, v.getTag());
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        return false;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+//        Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
+//                .subscribeOn(Schedulers.io())
+//                .doOnNext(integer -> {
+//                })
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(integer1 -> {
+//                });
     }
 
     public class DataViewHolder extends RecyclerView.ViewHolder {

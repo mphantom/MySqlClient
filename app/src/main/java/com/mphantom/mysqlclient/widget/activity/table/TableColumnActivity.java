@@ -46,7 +46,6 @@ public class TableColumnActivity extends AppCompatActivity implements View.OnCli
         btn_submit.setOnClickListener(this);
         Intent intent = getIntent();
         tableName = intent.getStringExtra("tableName");
-        Log.i("testforinsert", tableName);
         newColume = intent.getBooleanExtra("newColume", true);
         setTitle(newColume ? "新建行数据" : "修改行数据");
         listEdit = new ArrayList<>();
