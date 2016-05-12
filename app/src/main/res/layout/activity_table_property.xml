@@ -21,12 +21,13 @@
         android:id="@+id/btn_confirm_tablePropertyA"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:text="@string/submit" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_tablePropertyA"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@id/btn_confirm_tablePropertyA"
         android:layout_below="@id/layout_tablename_tablePropertyA" />
 

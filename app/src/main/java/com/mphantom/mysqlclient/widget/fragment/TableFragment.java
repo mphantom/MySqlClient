@@ -46,7 +46,7 @@ public class TableFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         floatButton.setOnClickListener(v -> {
-//            startActivity(new Intent(context, TableActivity.class));
+            startActivity(new Intent(context, TablePropertyActivity.class));
         });
         Observable.timer(1, TimeUnit.SECONDS)
                 .map(aLong1 -> App.getInstance().connectionService.showTables())

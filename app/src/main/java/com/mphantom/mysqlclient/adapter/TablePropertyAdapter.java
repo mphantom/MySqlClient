@@ -35,19 +35,28 @@ public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdap
 
     @Override
     public void onBindViewHolder(TablePropertyViewHolder holder, int position) {
-        TableProperty tableProperty = tablePropertyList.get(position);
-        holder.tv_field.setText(tableProperty.getName());
-        holder.tv_type.setText(tableProperty.getType());
-        holder.tv_null.setText(tableProperty.get_null());
-        holder.tv_key.setText(tableProperty.getKey() == null ? "<null>" : tableProperty.getKey());
-        holder.tv_default.setText(tableProperty.get_default() == null ? "<null>" : tableProperty.get_default());
-        holder.tv_extra.setText(tableProperty.getExtra() == null ? "<null>" : tableProperty.getExtra());
-        holder.itemView.setTag(tableProperty);
+        if (position == 0) {
+            holder.tv_field.setText("Field");
+            holder.tv_type.setText("Type");
+            holder.tv_null.setText("Null");
+            holder.tv_key.setText("Key");
+            holder.tv_default.setText("Default");
+            holder.tv_extra.setText("Extra");
+        } else {
+            TableProperty tableProperty = tablePropertyList.get(position - 1);
+            holder.tv_field.setText(tableProperty.getName());
+            holder.tv_type.setText(tableProperty.getType());
+            holder.tv_null.setText(tableProperty.get_null());
+            holder.tv_key.setText(tableProperty.getKey() == null ? "<null>" : tableProperty.getKey());
+            holder.tv_default.setText(tableProperty.get_default() == null ? "<null>" : tableProperty.get_default());
+            holder.tv_extra.setText(tableProperty.getExtra() == null ? "<null>" : tableProperty.getExtra());
+            holder.itemView.setTag(tableProperty);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return tablePropertyList.size();
+        return tablePropertyList.size() + 1;
     }
 
     class TablePropertyViewHolder extends RecyclerView.ViewHolder {
@@ -66,7 +75,7 @@ public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdap
 
         public TablePropertyViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

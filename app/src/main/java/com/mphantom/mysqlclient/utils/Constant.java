@@ -28,4 +28,5 @@ public class Constant {
     public static final int WHAT_FAILED_TO_CONNECT = 2;
     public static final int WHAT_UPDATE_RETURNED = 3;
     public static final int WHAT_ERROR_OCCURRED = 4;
+
 }

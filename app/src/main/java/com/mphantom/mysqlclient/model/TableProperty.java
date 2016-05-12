@@ -78,6 +78,34 @@ public class TableProperty {
         return field;
     }
 
+    public void setPrimary() {
+        this.key = "PRI";
+    }
+
+    public void setNullable(boolean flag) {
+        _null = flag ? "YES" : "NO";
+    }
+
+    public void setAutoIncrement() {
+        extra = "auto_increment";
+    }
+
+    public String ConvertSql() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(field).append(" ");
+        sb.append(type).append(" ");
+        if (_default != null)
+            sb.append("Default " + _default).append(" ");
+        if (key != null && key.contains("PRI"))
+            sb.append("PRIMARY KEY").append(" ");
+        if (_null != null && _null.equals("NO"))
+            sb.append("NOT NULL").append(" ");
+        if (extra != null && extra.contains("auto_increment"))
+            sb.append("AUTO_INCREMENT").append(" ");
+        sb.append(",");
+        return sb.toString();
+    }
+
     public String getContent() {
         StringBuilder sb = new StringBuilder();
         sb.append(field);

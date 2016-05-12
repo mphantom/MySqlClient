@@ -44,7 +44,7 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
         tableName = intent.getStringExtra("tableName");
-
+        floatButton.setOnClickListener(this);
         Observable.timer(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .doOnNext(aLong -> {
@@ -63,7 +63,7 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
                         TableActivity.this.startActivity(inten);
                     });
                 });
-        floatButton.setOnClickListener(this);
+
     }
 
     @Override

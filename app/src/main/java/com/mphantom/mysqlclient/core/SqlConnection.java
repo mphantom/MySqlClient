@@ -22,7 +22,7 @@ import java.util.Map;
 
 
 /**
- * Created by wushaorong on 16-5-9.
+ * Created by wushaorong on 11/6/15.
  */
 public class SqlConnection {
     private JdbcTemplate jdbcTemplate;
@@ -92,7 +92,6 @@ public class SqlConnection {
     public List<Database> showDbs() {
         String sql = "show databases";
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
-
         debug(sql, list);
         List<Database> dblist = new ArrayList<>();
         Iterator<Map<String, Object>> it = list.iterator();
@@ -132,6 +131,10 @@ public class SqlConnection {
         debug(sql, list);
         List<Trigger> triggers = new ArrayList<>();
         return triggers;
+    }
+
+    public void createTable(String tablename, List<TableProperty> list) {
+        String sql = "CREATE TABLE";
     }
 
     public List<TableProperty> schema(String tablename) {
