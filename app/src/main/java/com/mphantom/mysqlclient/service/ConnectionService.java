@@ -102,6 +102,11 @@ public class ConnectionService extends Service {
             sqlConnection.deleteFrom(sql);
     }
 
+    public void update(String sql) {
+        if (sqlConnection != null)
+            sqlConnection.update(sql);
+    }
+
     public List<Trigger> showTriggers() {
         if (sqlConnection != null)
             return sqlConnection.showTriggers();

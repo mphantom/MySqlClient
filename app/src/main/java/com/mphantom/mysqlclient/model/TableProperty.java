@@ -106,7 +106,7 @@ public class TableProperty {
 
         if (key != null && key.contains("PRI")) {
             sb.append("PRIMARY KEY").append(" ");
-        } else if (_default != null) {
+        } else if (!TextUtils.isEmpty(_default)) {
             sb.append("Default ").append(_default).append(" ");
         }
         if (_null != null && _null.equals("NO"))

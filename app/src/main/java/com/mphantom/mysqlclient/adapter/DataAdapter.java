@@ -66,7 +66,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
                     holder.tvParam4.setText("....");
                     break;
                 }
-                holder.tv_list.get(i).setText(map.get(listProperty.get(i).getField()).toString());
+                Object object = map.get(listProperty.get(i).getField());
+                if (object != null)
+                    holder.tv_list.get(i).setText(object.toString());
             }
         }
 

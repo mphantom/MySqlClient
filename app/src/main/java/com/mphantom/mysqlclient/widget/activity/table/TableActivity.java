@@ -16,6 +16,7 @@ import com.mphantom.mysqlclient.adapter.DataAdapter;
 import com.mphantom.mysqlclient.adapter.ItemTouchHelperCallback;
 import com.mphantom.mysqlclient.model.TableProperty;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,8 +45,8 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_table);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        Intent intent = getIntent();
-        tableName = intent.getStringExtra("tableName");
+        Intent fromIntent = getIntent();
+        tableName = fromIntent.getStringExtra("tableName");
         floatButton.setOnClickListener(this);
         Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
                 .subscribeOn(Schedulers.io())
@@ -61,10 +62,11 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
                     recyclerView.setAdapter(adapter);
                     adapter.setTableName(tableName);
                     adapter.setOnItemClickListener((view1, object) -> {
-                        Intent inten = new Intent(TableActivity.this, TableColumnActivity.class);
+                        Intent intent = new Intent(TableActivity.this, TableColumnActivity.class);
                         intent.putExtra("tableName", tableName);
                         intent.putExtra("newColume", false);
-                        startActivity(inten);
+                        intent.putExtra("data", (HashMap<String, Object>) object);
+                        startActivity(intent);
                     });
                     mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
                     mItemTouchHelper.attachToRecyclerView(recyclerView);

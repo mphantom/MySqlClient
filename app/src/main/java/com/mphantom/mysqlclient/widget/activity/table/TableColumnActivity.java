@@ -19,6 +19,7 @@ import com.mphantom.mysqlclient.utils.PropertyTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,6 +38,9 @@ public class TableColumnActivity extends AppCompatActivity implements View.OnCli
     private boolean newColume;
     private String name;
     private String value;
+    private String newValue;
+    private String olddefine;
+    private Map<String, Object> oldData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +52,10 @@ public class TableColumnActivity extends AppCompatActivity implements View.OnCli
         tableName = intent.getStringExtra("tableName");
         newColume = intent.getBooleanExtra("newColume", true);
         setTitle(newColume ? "新建行数据" : "修改行数据");
+        if (!newColume) {
+            oldData = (Map<String, Object>) intent.getSerializableExtra("data");
+        }
         listEdit = new ArrayList<>();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         list = App.getInstance().tablePropertyList;
         for (int i = 0; i < list.size(); i++) {
             TextInputLayout layout = new TextInputLayout(this);
@@ -71,19 +73,45 @@ public class TableColumnActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onClick(View v) {
-        StringBuilder sb_name = new StringBuilder();
-        StringBuilder sb_value = new StringBuilder();
-        for (int i = 0; i < listEdit.size(); i++) {
-            if (!TextUtils.isEmpty(listEdit.get(i).getText())) {
-                sb_name.append(list.get(i).getField()).append(",");
-                sb_value.append("\"").append(listEdit.get(i).getText()).append("\",");
+    protected void onResume() {
+        super.onResume();
+        if (!newColume) {
+            for (int i = 0; i < listEdit.size(); i++) {
+                Object object = oldData.get(list.get(i).getField());
+                if (object != null)
+                    listEdit.get(i).setText(object.toString());
             }
         }
-        sb_name.deleteCharAt(sb_name.length() - 1);
-        sb_value.deleteCharAt(sb_value.length() - 1);
-        name = sb_name.toString();
-        value = sb_value.toString();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (newColume) {
+            StringBuilder sb_name = new StringBuilder();
+            StringBuilder sb_value = new StringBuilder();
+            for (int i = 0; i < listEdit.size(); i++) {
+                if (!TextUtils.isEmpty(listEdit.get(i).getText())) {
+                    sb_name.append(list.get(i).getField()).append(",");
+                    sb_value.append("\"").append(listEdit.get(i).getText()).append("\",");
+                }
+            }
+            sb_name.deleteCharAt(sb_name.length() - 1);
+            sb_value.deleteCharAt(sb_value.length() - 1);
+            name = sb_name.toString();
+            value = sb_value.toString();
+        } else {
+            StringBuilder sb_newValue = new StringBuilder();
+            StringBuilder sb_oldDefine = new StringBuilder();
+            for (int i = 0; i < listEdit.size(); i++) {
+                String field = list.get(i).getField();
+                Object object = oldData.get(field);
+                if (object != null)
+                    sb_oldDefine.append(field).append("=\"").append(object.toString()).append("\"").append(" AND ");
+                sb_newValue.append(field).append("=\"").append(listEdit.get(i).getText()).append("\"").append(",");
+            }
+            newValue = sb_newValue.substring(0, sb_newValue.length() - 1);
+            olddefine = sb_oldDefine.substring(0, sb_oldDefine.length() - 4);
+        }
         Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
                 .subscribeOn(Schedulers.io())
                 .doOnNext(integer -> {
@@ -96,7 +124,14 @@ public class TableColumnActivity extends AppCompatActivity implements View.OnCli
                         Log.i("testforinsert", sql);
                         App.getInstance().connectionService.insertInto(sql);
                     } else {
-
+                        String sql = new StringBuffer().append("UPDATE ")
+                                .append(tableName).append(" SET ")
+                                .append(newValue)
+                                .append(" WHERE ")
+                                .append(olddefine)
+                                .toString();
+                        Log.i("testforUpdate", sql);
+                        App.getInstance().connectionService.update(sql);
                     }
 
                 })

@@ -190,6 +190,10 @@ public class SqlConnection {
         getJdbcTemplate().execute(sql);
     }
 
+    public void update(String sql) {
+        getJdbcTemplate().execute(sql);
+    }
+
     public void deleteFrom(String sql) {
         getJdbcTemplate().execute(sql);
     }
