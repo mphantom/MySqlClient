@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
  * Created by wushaorong on 16-5-12.
  */
 public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdapter.TablePropertyViewHolder>
-        implements View.OnClickListener, ItemTouchHelperCallback.ItemTouchHelperAdapter {
+        implements ItemTouchHelperCallback.ItemTouchHelperAdapter {
     private List<TableProperty> tablePropertyList;
     private final LayoutInflater mLayoutInflater;
 
@@ -55,7 +55,10 @@ public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdap
             holder.tv_default.setText(tableProperty.get_default() == null ? "<null>" : tableProperty.get_default());
             holder.tv_extra.setText(tableProperty.getExtra() == null ? "<null>" : tableProperty.getExtra());
             holder.itemView.setTag(tableProperty);
-            holder.itemView.setOnClickListener(this);
+            holder.itemView.setOnClickListener(v -> {
+                if (mItemClickListener != null)
+                    mItemClickListener.OnItemClick(v, v.getTag());
+            });
         }
     }
 
@@ -64,11 +67,6 @@ public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdap
         return tablePropertyList.size() + 1;
     }
 
-    @Override
-    public void onClick(View v) {
-        if (mItemClickListener != null)
-            mItemClickListener.OnItemClick(v, v.getTag());
-    }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
@@ -79,6 +77,8 @@ public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdap
     public void onItemDismiss(int position) {
         if (mItemDismissListener != null)
             mItemDismissListener.OnItemDismiss(tablePropertyList.get(position - 1));
+        tablePropertyList.remove(position - 1);
+        notifyDataSetChanged();
     }
 
     class TablePropertyViewHolder extends RecyclerView.ViewHolder {

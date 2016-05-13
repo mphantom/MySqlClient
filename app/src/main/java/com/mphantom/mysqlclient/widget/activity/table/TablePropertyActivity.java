@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,6 +52,8 @@ public class TablePropertyActivity extends AppCompatActivity
     private List<TableProperty> tablePropertyList;
     private List<String> alertSqls;
     private ItemTouchHelper mItemTouchHelper;
+    private boolean newProperty;
+    private TableProperty oldTableProperty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,7 @@ public class TablePropertyActivity extends AppCompatActivity
         switch (v.getId()) {
             case R.id.float_tablePropertyA:
                 TablePropertyDialog dialog = new TablePropertyDialog(this);
+                newProperty = true;
                 dialog.setOnConfirm(this);
                 dialog.show();
                 break;
@@ -126,24 +130,30 @@ public class TablePropertyActivity extends AppCompatActivity
     @Override
     public void OnButtonConfirm(Object object) {
         TableProperty tableProperty = (TableProperty) object;
-        if (newTable) {
+        if (newProperty) {
             tablePropertyList.add(tableProperty);
+            alertSqls.add(tableProperty.addTable(tableName));
         } else {
-
+            alertSqls.addAll(tableProperty.alertTable(tableName, oldTableProperty));
+            Log.i("testforthealertTable", "on");
+            for (String s : alertSqls)
+                Log.i("testforthealertTable", s);
         }
         adapter.notifyDataSetChanged();
     }
 
     @Override
     public void OnItemDismiss(Object object) {
-
+        alertSqls.add("ALTER TABLE " + tableName + " DROP " + ((TableProperty) object).getField());
     }
 
     @Override
     public void OnItemClick(View view, Object object) {
         TablePropertyDialog dialog = new TablePropertyDialog(this);
+        newProperty = false;
         dialog.setOnConfirm(this);
-        dialog.setTableProperty((TableProperty) object);
+        oldTableProperty = (TableProperty) object;
+        dialog.setTableProperty(oldTableProperty);
         dialog.show();
     }
 }

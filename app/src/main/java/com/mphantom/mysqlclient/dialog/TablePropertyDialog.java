@@ -77,10 +77,8 @@ public class TablePropertyDialog extends Dialog implements View.OnClickListener 
         tableProperty.setField(edit_file.getText().toString().trim());
         tableProperty.setType(edit_type.getText().toString().trim());
         tableProperty.set_default(edit_default.getText().toString().trim());
-        if (check_primaryKey.isChecked())
-            tableProperty.setPrimary(true);
-        if (check_autoInc.isChecked())
-            tableProperty.setAutoIncrement(true);
+        tableProperty.setPrimary(check_primaryKey.isChecked());
+        tableProperty.setAutoIncrement(check_autoInc.isChecked());
         tableProperty.setNullable(!check_notNull.isChecked());
         if (onConfirm != null)
             onConfirm.OnButtonConfirm(tableProperty);
