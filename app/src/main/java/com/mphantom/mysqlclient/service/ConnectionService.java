@@ -92,6 +92,11 @@ public class ConnectionService extends Service {
             sqlConnection.createTable(tablename, list);
     }
 
+    public void alterTable(List<String> sqls) {
+        if (sqlConnection != null)
+            sqlConnection.alterTable(sqls);
+    }
+
     public void insertInto(String sql) {
         if (sqlConnection != null)
             sqlConnection.insertInto(sql);

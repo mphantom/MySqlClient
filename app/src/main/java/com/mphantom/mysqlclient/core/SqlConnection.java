@@ -186,6 +186,11 @@ public class SqlConnection {
         getJdbcTemplate().execute(sql);
     }
 
+    public void alterTable(List<String> sqls) {
+        for (int i = 0; i < sqls.size(); i++)
+            getJdbcTemplate().execute(sqls.get(i));
+    }
+
     public void insertInto(String sql) {
         getJdbcTemplate().execute(sql);
     }

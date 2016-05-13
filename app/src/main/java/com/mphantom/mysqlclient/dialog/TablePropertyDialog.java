@@ -3,6 +3,7 @@ package com.mphantom.mysqlclient.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -35,6 +36,7 @@ public class TablePropertyDialog extends Dialog implements View.OnClickListener 
     Button btn_confirm;
 
     private OnConfirm onConfirm;
+    private TableProperty oldPerty;
 
     public TablePropertyDialog(Context context) {
         super(context);
@@ -46,6 +48,27 @@ public class TablePropertyDialog extends Dialog implements View.OnClickListener 
         setContentView(R.layout.dialog_table_property);
         ButterKnife.bind(this);
         btn_confirm.setOnClickListener(this);
+        check_primaryKey.setOnClickListener(v1 -> {
+            if (!check_primaryKey.isChecked()) {
+                if (oldPerty == null || TextUtils.isEmpty(oldPerty.getKey()))
+                    check_autoInc.setChecked(false);
+            }
+        });
+        check_autoInc.setOnClickListener(v -> {
+            if (check_autoInc.isChecked() && !check_primaryKey.isChecked()) {
+                if (oldPerty == null || TextUtils.isEmpty(oldPerty.getKey())) {
+                    check_autoInc.setChecked(false);
+                }
+            }
+        });
+        if (oldPerty != null) {
+            edit_file.setText(oldPerty.getField());
+            edit_type.setText(oldPerty.getType());
+            edit_default.setText(oldPerty.get_default());
+            check_autoInc.setChecked(oldPerty.isAutoIncrement());
+            check_primaryKey.setChecked(oldPerty.isPrimary());
+            check_notNull.setChecked(!oldPerty.isNullable());
+        }
     }
 
     @Override
@@ -68,4 +91,7 @@ public class TablePropertyDialog extends Dialog implements View.OnClickListener 
         this.onConfirm = confirm;
     }
 
+    public void setTableProperty(TableProperty property) {
+        this.oldPerty = property;
+    }
 }

@@ -18,9 +18,13 @@ import butterknife.ButterKnife;
 /**
  * Created by wushaorong on 16-5-12.
  */
-public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdapter.TablePropertyViewHolder> {
+public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdapter.TablePropertyViewHolder>
+        implements View.OnClickListener, ItemTouchHelperCallback.ItemTouchHelperAdapter {
     private List<TableProperty> tablePropertyList;
     private final LayoutInflater mLayoutInflater;
+
+    private OnItemClickListener mItemClickListener;
+    private OnItemDismissListener mItemDismissListener;
 
     public TablePropertyAdapter(Context context, List<TableProperty> list) {
         mLayoutInflater = LayoutInflater.from(context);
@@ -51,12 +55,30 @@ public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdap
             holder.tv_default.setText(tableProperty.get_default() == null ? "<null>" : tableProperty.get_default());
             holder.tv_extra.setText(tableProperty.getExtra() == null ? "<null>" : tableProperty.getExtra());
             holder.itemView.setTag(tableProperty);
+            holder.itemView.setOnClickListener(this);
         }
     }
 
     @Override
     public int getItemCount() {
         return tablePropertyList.size() + 1;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (mItemClickListener != null)
+            mItemClickListener.OnItemClick(v, v.getTag());
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        return false;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        if (mItemDismissListener != null)
+            mItemDismissListener.OnItemDismiss(tablePropertyList.get(position - 1));
     }
 
     class TablePropertyViewHolder extends RecyclerView.ViewHolder {
@@ -77,5 +99,13 @@ public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdap
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mItemClickListener = listener;
+    }
+
+    public void setOnItemDismissListener(OnItemDismissListener listener) {
+        this.mItemDismissListener = listener;
     }
 }

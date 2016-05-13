@@ -2,6 +2,9 @@ package com.mphantom.mysqlclient.model;
 
 import android.text.TextUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by wushaorong on 16-5-9.
  */
@@ -87,8 +90,16 @@ public class TableProperty {
         }
     }
 
+    public boolean isPrimary() {
+        return key.contains("PRI");
+    }
+
     public void setNullable(boolean flag) {
         _null = flag ? "YES" : "NO";
+    }
+
+    public boolean isNullable() {
+        return "YES".equals(_null);
     }
 
     public void setAutoIncrement(boolean flag) {
@@ -97,6 +108,10 @@ public class TableProperty {
         } else {
             extra = "";
         }
+    }
+
+    public boolean isAutoIncrement() {
+        return extra.contains("auto_increment");
     }
 
     public String ConvertSql() {
@@ -111,30 +126,63 @@ public class TableProperty {
         }
         if (_null != null && _null.equals("NO"))
             sb.append("NOT NULL").append(" ");
-        if (extra != null && extra.contains("auto_increment"))
+        if (extra != null && extra.contains("auto_increment") && !TextUtils.isEmpty(key))
             sb.append("AUTO_INCREMENT").append(" ");
         sb.append(",");
         return sb.toString();
     }
 
-    public String getContent() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(field);
-        sb.append(type);
-        if (!TextUtils.isEmpty(key)) {
-            sb.append(", ").append(key);
-        }
-        if (_null.equals("YES")) {
-            sb.append(", ").append("can be null");
+    public List<String> alert(String tableName, TableProperty property) {
+        if (this.equals(property))
+            return null;
+        List<String> list = new ArrayList<>();
+        if (key != null && !key.equals(property.getKey())) {
+            if (field.equals(property.getField())) {
+                if (key.contains("PRI")) {
+                    list.add("ALTER TABLE " + tableName + " ADD PRIMARY KEY (" + field + ")");
+                } else {
+                    list.add("ALTER TABLE " + tableName + " DROP PRIMARY KEY");
+                }
+            } else {
+                if (key.contains("PRI")) {
+                    list.add("ALTER TABLE " + tableName + " CHANGE " + property.getField() + " " + field + " " + type);
+                    list.add("ALTER TABLE " + tableName + " ADD PRIMARY KEY (" + field + ")");
+                } else {
+                    list.add("ALTER TABLE " + tableName + " DROP PRIMARY KEY");
+                    list.add("ALTER TABLE " + tableName + " CHANGE " + property.getField() + " " + field + " " + type);
+                }
+            }
         } else {
-            sb.append(", ").append("not null");
+            if (!field.equals(property.getField()))
+                list.add("ALTER TABLE " + tableName + " CHANGE " + property.getField() + " " + field + " " + type);
         }
-        if (!TextUtils.isEmpty(_default)) {
-            sb.append(", ").append("default for ").append(_default);
-        }
-        if (!TextUtils.isEmpty(extra)) {
-            sb.append(", ").append(extra);
-        }
-        return sb.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("ALTER TABLE ").append(tableName).append(" MODIFY ").append(field).append(" ");
+        if (_null != null && _null.equals("NO"))
+            sb.append("NOT NULL").append(" ");
+        if (extra != null && extra.contains("auto_increment") && !TextUtils.isEmpty(key))
+            sb.append("AUTO_INCREMENT").append(" ");
+        return list;
     }
+
+//    public String getContent() {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append(field);
+//        sb.append(type);
+//        if (!TextUtils.isEmpty(key)) {
+//            sb.append(", ").append(key);
+//        }
+//        if (_null.equals("YES")) {
+//            sb.append(", ").append("can be null");
+//        } else {
+//            sb.append(", ").append("not null");
+//        }
+//        if (!TextUtils.isEmpty(_default)) {
+//            sb.append(", ").append("default for ").append(_default);
+//        }
+//        if (!TextUtils.isEmpty(extra)) {
+//            sb.append(", ").append(extra);
+//        }
+//        return sb.toString();
+//    }
 }

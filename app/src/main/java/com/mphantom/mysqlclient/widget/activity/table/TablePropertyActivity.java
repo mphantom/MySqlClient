@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,9 @@ import android.widget.EditText;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
+import com.mphantom.mysqlclient.adapter.ItemTouchHelperCallback;
+import com.mphantom.mysqlclient.adapter.OnItemClickListener;
+import com.mphantom.mysqlclient.adapter.OnItemDismissListener;
 import com.mphantom.mysqlclient.adapter.TablePropertyAdapter;
 import com.mphantom.mysqlclient.dialog.TablePropertyDialog;
 import com.mphantom.mysqlclient.model.TableProperty;
@@ -30,7 +34,8 @@ import rx.schedulers.Schedulers;
 /**
  * Created by wushaorong on 16-5-12.
  */
-public class TablePropertyActivity extends AppCompatActivity implements View.OnClickListener, OnConfirm {
+public class TablePropertyActivity extends AppCompatActivity
+        implements View.OnClickListener, OnConfirm, OnItemDismissListener, OnItemClickListener {
     @Bind(R.id.btn_confirm_tablePropertyA)
     Button btn_confirm;
     @Bind(R.id.recycler_tablePropertyA)
@@ -44,6 +49,8 @@ public class TablePropertyActivity extends AppCompatActivity implements View.OnC
     private boolean newTable;
     private TablePropertyAdapter adapter;
     private List<TableProperty> tablePropertyList;
+    private List<String> alertSqls;
+    private ItemTouchHelper mItemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,27 +60,32 @@ public class TablePropertyActivity extends AppCompatActivity implements View.OnC
         btn_confirm.setOnClickListener(this);
         float_btn.setOnClickListener(this);
         Intent intent = getIntent();
-        tableName = intent.getStringExtra("tableName");
         newTable = intent.getBooleanExtra("newTable", true);
+        tableName = intent.getStringExtra("tableName");
         setTitle(newTable ? "新建表结构" : "修改表结构");
         recyclerView.setLayoutManager(new LinearLayoutManager(TablePropertyActivity.this));
+        tablePropertyList = new ArrayList<>();
+        adapter = new TablePropertyAdapter(TablePropertyActivity.this, tablePropertyList);
+        adapter.setOnItemDismissListener(this);
+        adapter.setOnItemClickListener(this);
+        recyclerView.setAdapter(adapter);
+        mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
         if (!newTable) {
+            alertSqls = new ArrayList<>();
             Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(1))
                     .subscribeOn(Schedulers.io())
                     .doOnNext(integer -> {
-                        tablePropertyList = App.getInstance().connectionService.schema(tableName);
+                        tablePropertyList.addAll(App.getInstance().connectionService.schema(tableName));
                         App.getInstance().tablePropertyList = tablePropertyList;
                     })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong1 -> {
-                        adapter = new TablePropertyAdapter(TablePropertyActivity.this, tablePropertyList);
-                        recyclerView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+//                        adapter = new TablePropertyAdapter(TablePropertyActivity.this, tablePropertyList);
+//                        recyclerView.setAdapter(adapter);
                     });
             edit_tableName.setText(tableName);
-        } else {
-            tablePropertyList = new ArrayList<>();
-            adapter = new TablePropertyAdapter(TablePropertyActivity.this, tablePropertyList);
-            recyclerView.setAdapter(adapter);
         }
     }
 
@@ -95,7 +107,10 @@ public class TablePropertyActivity extends AppCompatActivity implements View.OnC
                             if (newTable) {
                                 App.getInstance().connectionService.createTable(edit_tableName.getText().toString(), tablePropertyList);
                             } else {
-
+                                String newTableName = edit_tableName.getText().toString();
+                                if (!newTableName.equals(tableName))
+                                    alertSqls.add(new StringBuffer().append("ALTER TABLE ").append(tableName).append(" RENAME TO ").append(newTableName).toString());
+                                App.getInstance().connectionService.alterTable(alertSqls);
                             }
                         })
                         .observeOn(AndroidSchedulers.mainThread())
@@ -117,5 +132,18 @@ public class TablePropertyActivity extends AppCompatActivity implements View.OnC
 
         }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void OnItemDismiss(Object object) {
+
+    }
+
+    @Override
+    public void OnItemClick(View view, Object object) {
+        TablePropertyDialog dialog = new TablePropertyDialog(this);
+        dialog.setOnConfirm(this);
+        dialog.setTableProperty((TableProperty) object);
+        dialog.show();
     }
 }
