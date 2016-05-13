@@ -26,4 +26,7 @@
     <string name="primary_key">主键</string>
     <string name="auto_increment">自增</string>
     <string name="not_null">不可为空</string>
+    <string name="event">事件</string>
+    <string name="time">时间</string>
+    <string name="statement">事务</string>
 </resources>

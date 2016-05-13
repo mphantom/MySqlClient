@@ -8,6 +8,7 @@ import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.core.SqlConnection;
 import com.mphantom.mysqlclient.model.Table;
 import com.mphantom.mysqlclient.model.TableProperty;
+import com.mphantom.mysqlclient.model.Trigger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -95,4 +96,21 @@ public class ConnectionService extends Service {
         if (sqlConnection != null)
             sqlConnection.insertInto(sql);
     }
+
+    public List<Trigger> showTriggers() {
+        if (sqlConnection != null)
+            return sqlConnection.showTriggers();
+        return null;
+    }
+
+    public void deleteTrigger(String trigger) {
+        if (sqlConnection != null)
+            sqlConnection.deleteTrigger(trigger);
+    }
+
+    public void createTrigger(Trigger trigger) {
+        if (sqlConnection != null)
+            sqlConnection.createTrigger(trigger);
+    }
+
 }

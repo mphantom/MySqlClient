@@ -3,29 +3,42 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:weightSum="4">
 
     <TextView
         android:id="@+id/tv_param1_dataAdapter"
-        android:layout_width="50dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tv_param2_dataAdapter"
-        android:layout_width="50dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tv_param3_dataAdapter"
-        android:layout_width="50dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tv_param4_dataAdapter"
-        android:layout_width="50dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:singleLine="true" />
 </LinearLayout>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edit_FunctionDialog_name"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:hint="@string/functions" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edit_Functiondialog_time"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:hint="@string/time" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edit_FunctionDialog_event"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:hint="@string/event" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edit_FunctionDialog_table"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:hint="@string/table" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edit_FunctionDialog_statement"
+            android:layout_width="250dp"
+            android:layout_height="100dp"
+            android:gravity="left|top"
+            android:hint="@string/statement"
+            android:inputType="textMultiLine"
+            android:minLines="3" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/btn_FunctionDialog_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm" />
+</LinearLayout>

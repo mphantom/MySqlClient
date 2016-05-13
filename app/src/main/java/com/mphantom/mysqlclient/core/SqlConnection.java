@@ -130,7 +130,42 @@ public class SqlConnection {
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
         debug(sql, list);
         List<Trigger> triggers = new ArrayList<>();
+        Iterator<Map<String, Object>> it = list.iterator();
+        while (it.hasNext()) {
+            Map<String, Object> map = it.next();
+            Trigger trigger = new Trigger();
+            trigger.setTrigger(getValue(map, "Trigger"));
+            trigger.setEvent(getValue(map, "Event"));
+            trigger.setTable(getValue(map, "Table"));
+            trigger.setStatement(getValue(map, "Statement"));
+            trigger.setTiming(getValue(map, "Timing"));
+            trigger.setCreated(getValue(map, "Created"));
+            trigger.setSql_mode(getValue(map, "sql_mode"));
+            trigger.setDefiner(getValue(map, "Definer"));
+            trigger.setCharacter_set_client(getValue(map, "character_set_client"));
+            trigger.setCollation_connection(getValue(map, "collation_connection"));
+            trigger.setDatabaseCollation(getValue(map, "Database Collation"));
+            triggers.add(trigger);
+        }
         return triggers;
+    }
+
+    public void createTrigger(Trigger trigger) {
+        deleteTrigger(trigger.getTrigger());
+        StringBuilder sb = new StringBuilder();
+        sb.append("CREATE TRIGGER ").append(trigger.getTrigger()).append(" ")
+                .append(trigger.getTiming()).append(" ")
+                .append(trigger.getEvent()).append(" ON ")
+                .append(trigger.getTable()).append(" ")
+                .append(" FOR EACH ROW ")
+                .append(trigger.getStatement());
+        String sql = sb.toString();
+        getJdbcTemplate().execute(sql);
+    }
+
+    public void deleteTrigger(String trigger) {
+        String sql = "DROP TRIGGER IF EXISTS " + trigger;
+        getJdbcTemplate().execute(sql);
     }
 
     public void createTable(String tablename, List<TableProperty> list) {
@@ -147,8 +182,8 @@ public class SqlConnection {
     }
 
     public void deleteTable(String tableName) {
-//        String sql = "DROP TABLE " + tableName;
-//        getJdbcTemplate().execute(sql);
+        String sql = "DROP TABLE " + tableName;
+        getJdbcTemplate().execute(sql);
     }
 
     public void insertInto(String sql) {
