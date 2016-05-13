@@ -59,6 +59,7 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
                     recyclerView.setLayoutManager(new LinearLayoutManager(TableActivity.this));
                     DataAdapter adapter = new DataAdapter(TableActivity.this, listProperty, listdata);
                     recyclerView.setAdapter(adapter);
+                    adapter.setTableName(tableName);
                     adapter.setOnItemClickListener((view1, object) -> {
                         Intent inten = new Intent(TableActivity.this, TableColumnActivity.class);
                         intent.putExtra("tableName", tableName);

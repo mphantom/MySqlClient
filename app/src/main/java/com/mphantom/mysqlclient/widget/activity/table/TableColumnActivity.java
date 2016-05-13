@@ -87,13 +87,18 @@ public class TableColumnActivity extends AppCompatActivity implements View.OnCli
         Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
                 .subscribeOn(Schedulers.io())
                 .doOnNext(integer -> {
-                    String sql = new StringBuffer().append("INSERT  INTO ")
-                            .append(tableName).append("(")
-                            .append(name).append(")")
-                            .append(" VALUES ").append("(")
-                            .append(value).append(")").toString();
-                    Log.i("testforinsert", sql);
-                    App.getInstance().connectionService.insertInto(sql);
+                    if (newColume) {
+                        String sql = new StringBuffer().append("INSERT  INTO ")
+                                .append(tableName).append("(")
+                                .append(name).append(")")
+                                .append(" VALUES ").append("(")
+                                .append(value).append(")").toString();
+                        Log.i("testforinsert", sql);
+                        App.getInstance().connectionService.insertInto(sql);
+                    } else {
+
+                    }
+
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer1 -> finish());

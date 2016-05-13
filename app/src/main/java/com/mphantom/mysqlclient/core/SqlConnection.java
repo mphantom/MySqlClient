@@ -190,6 +190,10 @@ public class SqlConnection {
         getJdbcTemplate().execute(sql);
     }
 
+    public void deleteFrom(String sql) {
+        getJdbcTemplate().execute(sql);
+    }
+
     public List<TableProperty> schema(String tablename) {
         String sql = "desc " + tablename;
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);

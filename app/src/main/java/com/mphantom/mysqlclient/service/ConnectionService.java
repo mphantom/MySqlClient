@@ -97,6 +97,11 @@ public class ConnectionService extends Service {
             sqlConnection.insertInto(sql);
     }
 
+    public void deleteFrom(String sql) {
+        if (sqlConnection != null)
+            sqlConnection.deleteFrom(sql);
+    }
+
     public List<Trigger> showTriggers() {
         if (sqlConnection != null)
             return sqlConnection.showTriggers();

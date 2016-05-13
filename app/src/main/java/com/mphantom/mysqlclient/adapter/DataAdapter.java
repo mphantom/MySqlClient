@@ -2,11 +2,14 @@ package com.mphantom.mysqlclient.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.model.TableProperty;
 
@@ -16,6 +19,9 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by wushaorong on 16-5-12.
@@ -27,6 +33,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
     private OnItemClickListener mItemClickListener;
     private List<TableProperty> listProperty;
     private List<Map<String, Object>> lists;
+    private String tableName;
 
     public DataAdapter(Context context, List<TableProperty> listProperty, List<Map<String, Object>> lists) {
         mLayoutInflater = LayoutInflater.from(context);
@@ -88,13 +95,26 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 
     @Override
     public void onItemDismiss(int position) {
-//        Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
-//                .subscribeOn(Schedulers.io())
-//                .doOnNext(integer -> {
-//                })
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(integer1 -> {
-//                });
+        Map<String, Object> map = lists.get(position - 1);
+        StringBuilder sb = new StringBuilder();
+        sb.append("DELETE FROM ").append(tableName).append(" ")
+                .append(" WHERE ");
+        for (int i = 0; i < listProperty.size(); i++) {
+            String field = listProperty.get(i).getField();
+            String value = map.get(field).toString();
+            if (!TextUtils.isEmpty(value))
+                sb.append(" ").append(field).append(" = ").append("\"").append(value).append("\"").append(" and");
+        }
+        String sql = sb.substring(0, sb.length() - 3);
+        Log.d("testforthedelete", sql);
+        Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
+                .subscribeOn(Schedulers.io())
+                .doOnNext(integer -> App.getInstance().connectionService.deleteFrom(sql))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer1 -> {
+                    lists.remove(position - 1);
+                    notifyDataSetChanged();
+                });
     }
 
     public class DataViewHolder extends RecyclerView.ViewHolder {
@@ -117,5 +137,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
             tv_list.add(tvParam3);
             tv_list.add(tvParam4);
         }
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }
