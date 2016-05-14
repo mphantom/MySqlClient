@@ -8,7 +8,7 @@ ext {
             VERSION_CODE     : 1
     ]
     libraryVersion = [
-            "support"           : "23.2.1",
+            "support"           : "23.3.0",
             "retrofit2"         : "2.0.1",
             "okhttp3"           : "3.2.0",
             "leakcanary-android": "1.4-beta2",

@@ -23,6 +23,11 @@ public class App extends Application {
     public ConnectionService connectionService;
     public ConnectionInfo connectionInfo;
     public List<TableProperty> tablePropertyList;
+//    public KnownHosts knownHosts;
+//    public OutputStream stdin;
+//    public InputStream stdout;
+//    public InputStream stderr;
+
 
     public static App getInstance() {
         return instance;
@@ -42,6 +47,7 @@ public class App extends Application {
                                     Constant.DEFAULT_PORT, Constant.DEFAULT_USER,
                                     Constant.DEFAULT_PASSWORD, Constant.DEFAULT_DATABASE)));
                 }, Throwable::printStackTrace);
+//        knownHosts = new KnownHosts();
     }
 
     public void setConnectionInfo(ConnectionInfo connectionInfo) {

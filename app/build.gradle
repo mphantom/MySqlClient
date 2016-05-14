@@ -70,20 +70,23 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile rootProject.ext.library["support-v4"]
     compile rootProject.ext.library["design"]
-//    compile rootProject.ext.library["support-v7"]
+    //    compile rootProject.ext.library["support-v7"]
     compile rootProject.ext.library["recyclerview"]
     compile rootProject.ext.library["cardview"]
-    compile rootProject.ext.library["percent"]
-    compile rootProject.ext.library["picasso"]
+    //    compile rootProject.ext.library["percent"]
+    //    compile rootProject.ext.library["picasso"]
     compile rootProject.ext.library["rxandroid"]
     compile rootProject.ext.library["rxjava"]
-    compile rootProject.ext.library["okhttp-logging-interceptor"]
-    compile rootProject.ext.library["retrofit"]
-    compile rootProject.ext.library["retrofit-rxjava"]
+    //    compile rootProject.ext.library["okhttp-logging-interceptor"]
+    //    compile rootProject.ext.library["retrofit"]
+    //    compile rootProject.ext.library["retrofit-rxjava"]
     compile rootProject.ext.library["mysql-connector-java"]
     compile rootProject.ext.library["spring-jdbc"]
     compile rootProject.ext.library["commons-dbcp"]
     compile rootProject.ext.library["butterknife"]
-    compile rootProject.ext.library["dagger2"]
-    compile 'com.android.support:support-v4:23.3.0'
+    //    compile rootProject.ext.library["dagger2"]
+    //    compile 'org.connectbot:sshlib:2.2.4-SNAPSHOT'
+    //    compile 'com.jcabi:jcabi-ssh:1.5.2'
+    //    compile 'com.android.support:support-v4:23.3.0'
+    compile files('libs/jcabi-ssh-1.5.2-jar-with-dependencies.jar')
 }
