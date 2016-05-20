@@ -19,9 +19,9 @@ public class RealmHelper {
         RealmSchema schema = dynamicRealm.getSchema();
         //TODO 数据库版本升级时需要在这里进行声明
         //TODO data包中Realm类更改后需要进行增加
-//            if (oldversion == 1) {
-//                oldversion++;
-//            }
+            if (oldversion == 1) {
+                oldversion++;
+            }
     };
 
     private RealmHelper() {

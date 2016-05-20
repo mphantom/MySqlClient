@@ -11,6 +11,9 @@ import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.model.ConnectionInfo;
 import com.mphantom.mysqlclient.realm.ConnectionHelper;
 import com.mphantom.mysqlclient.utils.Constant;
+import com.mphantom.mysqlclient.utils.OnConfirm;
+
+import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,6 +38,7 @@ public class ConnectionDialog extends Dialog implements View.OnClickListener {
     Button btn_confirm;
 
     private ConnectionInfo connectionInfo;
+    private OnConfirm onConfirm;
 
     public ConnectionDialog(Context context) {
         super(context);
@@ -65,6 +69,7 @@ public class ConnectionDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         ConnectionInfo info = new ConnectionInfo();
+        info.setUuid(UUID.randomUUID().toString());
         info.setName(edit_nick.getText().toString().trim());
         info.setHost(edit_host.getText().toString().trim());
         info.setPort(Integer.parseInt(edit_port.getText().toString().trim()));
@@ -73,9 +78,16 @@ public class ConnectionDialog extends Dialog implements View.OnClickListener {
         info.setPassword(edit_password.getText().toString());
         ConnectionHelper.getInstance().insert(info);
         this.dismiss();
+        if (onConfirm != null) {
+            onConfirm.OnButtonConfirm(new Object());
+        }
     }
 
     public void setConnectionInfo(ConnectionInfo info) {
         this.connectionInfo = info;
+    }
+
+    public void setOnConfirm(OnConfirm confirm) {
+        this.onConfirm = confirm;
     }
 }

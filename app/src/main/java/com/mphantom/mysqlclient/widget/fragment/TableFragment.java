@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.TextView;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
@@ -30,6 +31,8 @@ public class TableFragment extends BaseFragment {
     RecyclerView recyclerView;
     @Bind(R.id.float_tableF)
     FloatingActionButton floatButton;
+    @Bind(R.id.tv_tableF)
+    TextView tvTip;
 
     private ItemTouchHelper mItemTouchHelper;
 
@@ -52,27 +55,43 @@ public class TableFragment extends BaseFragment {
             intent.putExtra("newTable", true);
             startActivity(intent);
         });
-        Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(1))
-                .subscribeOn(Schedulers.io())
-                .map(aLong1 -> App.getInstance().connectionService.showTables())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(tables -> {
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    TableAdapter adapter = new TableAdapter(context, tables);
-                    adapter.setOnItemClickListener((view1, object) -> {
-                        Intent intent = new Intent(context, TableActivity.class);
-                        intent.putExtra("tableName", ((Table) object).getName());
-                        context.startActivity(intent);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (App.getInstance().connectionService.isConnectToSQL()) {
+            tvTip.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            floatButton.setVisibility(View.VISIBLE);
+            Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(1))
+                    .subscribeOn(Schedulers.io())
+                    .map(aLong1 -> App.getInstance().connectionService.showTables())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(tables -> {
+                        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                        TableAdapter adapter = new TableAdapter(context, tables);
+                        adapter.setOnItemClickListener((view1, object) -> {
+                            Intent intent = new Intent(context, TableActivity.class);
+                            intent.putExtra("tableName", ((Table) object).getName());
+                            context.startActivity(intent);
+                        });
+                        adapter.setOnItemLongClickListener((view2, object1) -> {
+                            Intent intent = new Intent(context, TablePropertyActivity.class);
+                            intent.putExtra("tableName", ((Table) object1).getName());
+                            intent.putExtra("newTable", false);
+                            context.startActivity(intent);
+                        });
+                        recyclerView.setAdapter(adapter);
+                        mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
+                        mItemTouchHelper.attachToRecyclerView(recyclerView);
                     });
-                    adapter.setOnItemLongClickListener((view2, object1) -> {
-                        Intent intent = new Intent(context, TablePropertyActivity.class);
-                        intent.putExtra("tableName", ((Table) object1).getName());
-                        intent.putExtra("newTable", false);
-                        context.startActivity(intent);
-                    });
-                    recyclerView.setAdapter(adapter);
-                    mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
-                    mItemTouchHelper.attachToRecyclerView(recyclerView);
-                });
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            floatButton.setVisibility(View.GONE);
+            tvTip.setVisibility(View.VISIBLE);
+        }
+
     }
 }

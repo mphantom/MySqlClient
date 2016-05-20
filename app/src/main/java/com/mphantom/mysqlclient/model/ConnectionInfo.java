@@ -8,6 +8,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class ConnectionInfo extends RealmObject {
     @PrimaryKey
+    private String uuid;
     private String name;
     private String host;
     private int port;
@@ -18,7 +19,8 @@ public class ConnectionInfo extends RealmObject {
     public ConnectionInfo() {
     }
 
-    public ConnectionInfo(String name, String host, int port, String userName, String password, String database) {
+    public ConnectionInfo(String uuid, String name, String host, int port, String userName, String password, String database) {
+        this.uuid = uuid;
         this.name = name;
         this.host = host;
         this.port = port;
@@ -75,5 +77,11 @@ public class ConnectionInfo extends RealmObject {
         this.database = database;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
 
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 }

@@ -2,21 +2,32 @@ package com.mphantom.mysqlclient.widget.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
-import com.jcabi.ssh.SSHByPassword;
-import com.jcabi.ssh.Shell;
+import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
+import com.mphantom.mysqlclient.adapter.ConsoleAdapter;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
+import java.util.List;
 
+import butterknife.Bind;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class SshFragment extends BaseFragment {
+public class SshFragment extends BaseFragment implements View.OnClickListener {
+    @Bind(R.id.recycler_SSHF)
+    RecyclerView recyclerview;
+    @Bind(R.id.edit_SSHF_input)
+    EditText edit_input;
+    @Bind(R.id.btn_SSHF_submit)
+    Button btn_submit;
+    private ConsoleAdapter adapter;
+    private List<String> lists;
 //        implements ConnectionMonitor {
 //    private static final int conditions = ChannelCondition.STDOUT_DATA
 //            | ChannelCondition.STDERR_DATA
@@ -37,6 +48,11 @@ public class SshFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        lists = App.getInstance().sshService.list;
+        adapter = new ConsoleAdapter(context, lists);
+        recyclerview.setLayoutManager(new LinearLayoutManager(context));
+        recyclerview.setAdapter(adapter);
+        btn_submit.setOnClickListener(this);
 //        Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
 //                .subscribeOn(Schedulers.io())
 //                .map(integer -> {
@@ -86,22 +102,27 @@ public class SshFragment extends BaseFragment {
 //        }).start();
         Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
                 .subscribeOn(Schedulers.io())
-                .map(integer1 -> {
-                    Shell shell;
-                    try {
-                        shell = new SSHByPassword("45.78.20.91", 29222, "root", "yruHpW4v7t4N");
-                        String stdout = new Shell.Plain(shell).exec("ls -al");
-                        return stdout;
-                    } catch (UnknownHostException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return " ";
-
+                .doOnNext(integer1 -> {
+                    App.getInstance().sshService.setConnectedInfo("45.78.20.91", 29222, "root", "yruHpW4v7t4N");
+                    App.getInstance().sshService.exect("ls -al");
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> Log.i("testfortheshh", s));
+                .subscribe(s -> adapter.notifyDataSetChanged());
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_SSHF_submit) {
+            String s = edit_input.getText().toString();
+            App.getInstance().sshService.list.add(s);
+            adapter.notifyDataSetChanged();
+            Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
+                    .subscribeOn(Schedulers.io())
+                    .doOnNext(integer1 -> App.getInstance().sshService.exect(s))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(integer -> adapter.notifyDataSetChanged());
+        }
+
     }
 
 //    @Override

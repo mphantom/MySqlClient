@@ -25,8 +25,8 @@ public class ConnectionHelper {
         realm = RealmHelper.getInstance().getRealm();
     }
 
-    public ConnectionInfo find(String name) {
-        return realm.where(ConnectionInfo.class).equalTo("name", name).findFirst();
+    public ConnectionInfo find(String uuid) {
+        return realm.where(ConnectionInfo.class).equalTo("uuid", uuid).findFirst();
     }
 
     public List<ConnectionInfo> findAll() {
@@ -53,9 +53,9 @@ public class ConnectionHelper {
     }
 
 
-    public void update(String name, ConnectionInfo connectionInfo) {
+    public void update(String uuid, ConnectionInfo connectionInfo) {
         realm.beginTransaction();
-        ConnectionInfo connection = find(name);
+        ConnectionInfo connection = find(uuid);
         connection.setName(connectionInfo.getName());
         connection.setHost(connectionInfo.getHost());
         connection.setPort(connectionInfo.getPort());
@@ -73,9 +73,9 @@ public class ConnectionHelper {
     }
 
 
-    public void delete(String name) {
+    public void delete(String uuid) {
         realm.beginTransaction();
-        RealmResults<ConnectionInfo> results = realm.where(ConnectionInfo.class).equalTo("name", name).findAll();
+        RealmResults<ConnectionInfo> results = realm.where(ConnectionInfo.class).equalTo("uuid", uuid).findAll();
         results.clear();
         realm.commitTransaction();
     }

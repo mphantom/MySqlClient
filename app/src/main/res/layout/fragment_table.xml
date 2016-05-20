@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <TextView
+        android:id="@+id/tv_tableF"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/connection_first" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_tableF"
         android:layout_width="match_parent"

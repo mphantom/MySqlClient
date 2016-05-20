@@ -36,6 +36,10 @@ public class ConnectionService extends Service {
         return null;
     }
 
+    public boolean isConnectToSQL() {
+        return sqlConnection != null;
+    }
+
     public void setSqlConnection(SqlConnection sqlConnection) {
         if (this.sqlConnection != null) {
             sqlConnectionClose();
@@ -44,7 +48,9 @@ public class ConnectionService extends Service {
     }
 
     public void sqlConnectionClose() {
-        sqlConnection.close();
+        if (sqlConnection != null)
+            sqlConnection.close();
+        sqlConnection = null;
     }
 
     public List<Table> showTables() {

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
@@ -33,6 +34,8 @@ public class ConsoleFragment extends BaseFragment implements View.OnClickListene
     EditText edit_input;
     @Bind(R.id.btn_consoleF_submit)
     Button btn_submit;
+    @Bind(R.id.tv_ConsoleF)
+    TextView tvTip;
     private ConsoleAdapter adapter;
     private List<String> lists;
 
@@ -55,6 +58,22 @@ public class ConsoleFragment extends BaseFragment implements View.OnClickListene
         recyclerview.setLayoutManager(new LinearLayoutManager(context));
         recyclerview.setAdapter(adapter);
         btn_submit.setOnClickListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (App.getInstance().connectionService.isConnectToSQL()) {
+            tvTip.setVisibility(View.GONE);
+            recyclerview.setVisibility(View.VISIBLE);
+            btn_submit.setVisibility(View.VISIBLE);
+            edit_input.setVisibility(View.VISIBLE);
+        } else {
+            tvTip.setVisibility(View.VISIBLE);
+            recyclerview.setVisibility(View.GONE);
+            btn_submit.setVisibility(View.GONE);
+            edit_input.setVisibility(View.GONE);
+        }
     }
 
     @Override

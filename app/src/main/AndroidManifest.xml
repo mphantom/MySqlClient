@@ -44,6 +44,11 @@
 
         <activity android:name=".widget.activity.table.TableColumnActivity" />
         <activity android:name=".widget.activity.table.TablePropertyActivity" />
+
+        <service
+            android:name=".service.SshService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

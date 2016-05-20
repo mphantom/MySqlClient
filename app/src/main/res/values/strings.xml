@@ -29,4 +29,7 @@
     <string name="event">事件</string>
     <string name="time">时间</string>
     <string name="statement">事务</string>
+    <string name="connection_fail">连接数据库失败</string>
+    <string name="connection_success">连接数据库成功</string>
+    <string name="connection_first">你还未连接数据库，请先连接数据库</string>
 </resources>

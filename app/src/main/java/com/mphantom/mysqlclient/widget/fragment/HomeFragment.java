@@ -7,21 +7,28 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.Toast;
 
+import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.adapter.ConnectionAdapter;
 import com.mphantom.mysqlclient.adapter.ItemTouchHelperCallback;
 import com.mphantom.mysqlclient.adapter.OnItemClickListener;
 import com.mphantom.mysqlclient.adapter.OnItemLongClickListener;
+import com.mphantom.mysqlclient.core.SqlConnection;
 import com.mphantom.mysqlclient.dialog.ConnectionDialog;
 import com.mphantom.mysqlclient.model.ConnectionInfo;
+import com.mphantom.mysqlclient.utils.OnConfirm;
 
 import butterknife.Bind;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by wushaorong on 16-5-2.
  */
-public class HomeFragment extends BaseFragment implements OnItemClickListener, OnItemLongClickListener {
+public class HomeFragment extends BaseFragment implements OnItemClickListener, OnItemLongClickListener, OnConfirm {
     @Bind(R.id.recycler_homeF)
     RecyclerView recyclerView;
     @Bind(R.id.float_homeF)
@@ -52,6 +59,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
         mItemTouchHelper.attachToRecyclerView(recyclerView);
         floatButton.setOnClickListener(v -> {
             ConnectionDialog dialog = new ConnectionDialog(context);
+            dialog.setOnConfirm(this);
             dialog.show();
         });
 
@@ -59,13 +67,30 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
 
     @Override
     public void OnItemClick(View view, Object object) {
-
+        Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(1))
+                .subscribeOn(Schedulers.io())
+                .doOnNext(integer -> {
+                    App.getInstance().connectionService.setSqlConnection(new SqlConnection((ConnectionInfo) object));
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(integer1 -> {
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(context,R.string.connection_success,Toast.LENGTH_SHORT).show();
+                }, throwable -> {
+                    Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override
     public void OnItemLongClick(View view, Object object) {
         ConnectionDialog dialog = new ConnectionDialog(context);
         dialog.setConnectionInfo((ConnectionInfo) object);
+        dialog.setOnConfirm(this);
         dialog.show();
+    }
+
+    @Override
+    public void OnButtonConfirm(Object object) {
+        adapter.notifyDataSetChanged();
     }
 }
