@@ -111,7 +111,7 @@ public class SqlConnection {
     }
 
     public List<Table> showTables() {
-        String sql = "show tables";
+        String sql = "show full tables";
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
         debug(sql, list);
         List<Table> tblist = new ArrayList<>();
@@ -120,6 +120,7 @@ public class SqlConnection {
             Map<String, Object> map = it.next();
             Table tb = new Table();
             tb.setName(map.values().toArray()[0].toString());
+            tb.setContent(map.values().toArray()[1].toString());
             tblist.add(tb);
         }
         return tblist;

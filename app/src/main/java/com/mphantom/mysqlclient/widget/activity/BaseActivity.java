@@ -74,7 +74,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.show(fragmentArrays.get(key)).commit();
+        Fragment fragment = fragmentArrays.get(key);
+        fragmentTransaction.show(fragment).commit();
+        fragment.onResume();
     }
 
     protected boolean isFragmentExit(@IdRes int key) {

@@ -74,8 +74,8 @@ public class TablePropertyActivity extends AppCompatActivity
         recyclerView.setAdapter(adapter);
         mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
         mItemTouchHelper.attachToRecyclerView(recyclerView);
+        alertSqls = new ArrayList<>();
         if (!newTable) {
-            alertSqls = new ArrayList<>();
             Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(1))
                     .subscribeOn(Schedulers.io())
                     .doOnNext(integer -> {

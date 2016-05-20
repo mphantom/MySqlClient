@@ -135,7 +135,8 @@ public class TableProperty {
     public String addTable(String tableName) {
         StringBuilder sb = new StringBuilder();
         sb.append("ALTER TABLE ").append(tableName)
-                .append(" ADD ").append(field).append(" ")
+                .append(" ADD ").append("`").
+                append(field).append("` ")
                 .append(type).append(" ");
         if (_null != null && _null.equals("NO"))
             sb.append("NOT NULL").append(" ");

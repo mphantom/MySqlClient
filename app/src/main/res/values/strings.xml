@@ -5,6 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="table">数据表</string>
     <string name="tablename">表名</string>
+    <string name="view">视图</string>
     <string name="ssh">ssh连接</string>
     <string name="functions">触发器</string>
     <string name="setting">设置</string>
@@ -32,4 +33,5 @@
     <string name="connection_fail">连接数据库失败</string>
     <string name="connection_success">连接数据库成功</string>
     <string name="connection_first">你还未连接数据库，请先连接数据库</string>
+    <string name="create_trigger_fails">触发器创建失败</string>
 </resources>

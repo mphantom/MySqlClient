@@ -22,7 +22,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/edit_Functiondialog_time"
             android:layout_width="250dp"
             android:layout_height="40dp"
@@ -33,7 +33,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/edit_FunctionDialog_event"
             android:layout_width="250dp"
             android:layout_height="40dp"

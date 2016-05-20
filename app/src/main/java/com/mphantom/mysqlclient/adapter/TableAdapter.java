@@ -63,8 +63,10 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
     @Override
     public void onItemDismiss(int position) {
-        Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(position)).subscribeOn(Schedulers.io())
-                .doOnNext(integer -> App.getInstance().connectionService.deleteTable(lists.get(integer).getName())).observeOn(AndroidSchedulers.mainThread())
+        Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(position))
+                .subscribeOn(Schedulers.io())
+                .doOnNext(integer -> App.getInstance().connectionService.deleteTable(lists.get(integer).getName()))
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer1 -> {
                     lists.remove(position);
                     notifyDataSetChanged();

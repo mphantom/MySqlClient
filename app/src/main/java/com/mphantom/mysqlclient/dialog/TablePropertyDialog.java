@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.model.TableProperty;
 import com.mphantom.mysqlclient.utils.OnConfirm;
+import com.mphantom.mysqlclient.utils.PropertyTypeHelper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,7 +26,7 @@ public class TablePropertyDialog extends Dialog implements View.OnClickListener 
     @Bind(R.id.edit_tablePropertyDialog_file)
     EditText edit_file;
     @Bind(R.id.edit_tablePropertyDialog_type)
-    EditText edit_type;
+    AutoCompleteTextView edit_type;
     @Bind(R.id.edit_tablePropertyDialog_default)
     EditText edit_default;
     @Bind(R.id.check_tablePropertyDialog_autoInc)
@@ -47,6 +50,8 @@ public class TablePropertyDialog extends Dialog implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_table_property);
         ButterKnife.bind(this);
+        edit_type.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, PropertyTypeHelper.TYPE));
+        edit_type.setThreshold(1);
         btn_confirm.setOnClickListener(this);
         check_primaryKey.setOnClickListener(v1 -> {
             if (!check_primaryKey.isChecked()) {

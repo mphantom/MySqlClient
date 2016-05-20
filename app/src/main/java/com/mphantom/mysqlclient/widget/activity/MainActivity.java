@@ -14,6 +14,7 @@ import com.mphantom.mysqlclient.widget.fragment.FunctionFragment;
 import com.mphantom.mysqlclient.widget.fragment.HomeFragment;
 import com.mphantom.mysqlclient.widget.fragment.SshFragment;
 import com.mphantom.mysqlclient.widget.fragment.TableFragment;
+import com.mphantom.mysqlclient.widget.fragment.ViewFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,7 +45,7 @@ public class MainActivity extends BaseActivity {
                     title = item.getTitle();
                     toolbar.setTitle(title);
                     currentIndex = item.getItemId();
-                    changeFragment(item.getItemId(), new HomeFragment(), "HomeFragment");
+                    changeFragment(currentIndex, new HomeFragment(), "HomeFragment");
                     drawerLayout.closeDrawers();
                     return true;
                 case R.id.navigation_table:
@@ -52,7 +53,15 @@ public class MainActivity extends BaseActivity {
                     title = item.getTitle();
                     toolbar.setTitle(title);
                     currentIndex = item.getItemId();
-                    changeFragment(item.getItemId(), new TableFragment(), "TableFragment");
+                    changeFragment(currentIndex, new TableFragment(), "TableFragment");
+                    drawerLayout.closeDrawers();
+                    return true;
+                case R.id.navigation_view:
+                    item.setChecked(true);
+                    title = item.getTitle();
+                    toolbar.setTitle(title);
+                    currentIndex = item.getItemId();
+                    changeFragment(currentIndex, new ViewFragment(), "ViewFragment");
                     drawerLayout.closeDrawers();
                     return true;
                 case R.id.navigation_consule:
@@ -60,7 +69,7 @@ public class MainActivity extends BaseActivity {
                     title = item.getTitle();
                     toolbar.setTitle(title);
                     currentIndex = item.getItemId();
-                    changeFragment(item.getItemId(), new ConsoleFragment(), "ConsoleFragment");
+                    changeFragment(currentIndex, new ConsoleFragment(), "ConsoleFragment");
                     drawerLayout.closeDrawers();
                     return true;
                 case R.id.navigation_ssh:
@@ -68,7 +77,7 @@ public class MainActivity extends BaseActivity {
                     title = item.getTitle();
                     toolbar.setTitle(title);
                     currentIndex = item.getItemId();
-                    changeFragment(item.getItemId(), new SshFragment(), "SshFragment");
+                    changeFragment(currentIndex, new SshFragment(), "SshFragment");
                     drawerLayout.closeDrawers();
                     return true;
                 case R.id.navigation_functions:
@@ -76,7 +85,7 @@ public class MainActivity extends BaseActivity {
                     title = item.getTitle();
                     toolbar.setTitle(title);
                     currentIndex = item.getItemId();
-                    changeFragment(item.getItemId(), new FunctionFragment(), "FunctionFragment");
+                    changeFragment(currentIndex, new FunctionFragment(), "FunctionFragment");
                     drawerLayout.closeDrawers();
                     return true;
                 case R.id.navigation_setting:

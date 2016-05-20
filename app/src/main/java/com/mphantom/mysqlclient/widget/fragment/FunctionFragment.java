@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.TextView;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
@@ -28,6 +29,8 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
     RecyclerView recyclerView;
     @Bind(R.id.float_FunctionF)
     FloatingActionButton float_btn;
+    @Bind(R.id.tv_FunctionF)
+    TextView tvTip;
 
     private ItemTouchHelper mItemTouchHelper;
 
@@ -45,23 +48,36 @@ public class FunctionFragment extends BaseFragment implements View.OnClickListen
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         float_btn.setOnClickListener(this);
+    }
 
-        Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(1))
-                .subscribeOn(Schedulers.io())
-                .map(aLong1 -> App.getInstance().connectionService.showTriggers())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(triggers -> {
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    FunctionAdapter adapter = new FunctionAdapter(context, triggers);
-                    adapter.setOnItemLongClickListener((view2, object1) -> {
-                        FunctionDialog dialog = new FunctionDialog(context);
-                        dialog.setTrigger((Trigger) object1);
-                        dialog.show();
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (App.getInstance().connectionService.isConnectToSQL()) {
+            tvTip.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            float_btn.setVisibility(View.VISIBLE);
+            Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(1))
+                    .subscribeOn(Schedulers.io())
+                    .map(aLong1 -> App.getInstance().connectionService.showTriggers())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(triggers -> {
+                        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                        FunctionAdapter adapter = new FunctionAdapter(context, triggers);
+                        adapter.setOnItemLongClickListener((view2, object1) -> {
+                            FunctionDialog dialog = new FunctionDialog(context);
+                            dialog.setTrigger((Trigger) object1);
+                            dialog.show();
+                        });
+                        recyclerView.setAdapter(adapter);
+                        mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
+                        mItemTouchHelper.attachToRecyclerView(recyclerView);
                     });
-                    recyclerView.setAdapter(adapter);
-                    mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
-                    mItemTouchHelper.attachToRecyclerView(recyclerView);
-                });
+        } else {
+            tvTip.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            float_btn.setVisibility(View.GONE);
+        }
     }
 
     @Override

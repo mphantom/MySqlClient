@@ -4,8 +4,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
@@ -24,9 +27,9 @@ public class FunctionDialog extends Dialog implements View.OnClickListener {
     @Bind(R.id.edit_FunctionDialog_name)
     EditText edit_name;
     @Bind(R.id.edit_Functiondialog_time)
-    EditText edit_time;
+    AutoCompleteTextView edit_time;
     @Bind(R.id.edit_FunctionDialog_event)
-    EditText edit_event;
+    AutoCompleteTextView edit_event;
     @Bind(R.id.edit_FunctionDialog_table)
     EditText edit_table;
     @Bind(R.id.edit_FunctionDialog_statement)
@@ -35,6 +38,8 @@ public class FunctionDialog extends Dialog implements View.OnClickListener {
     Button btn_confirm;
 
     private Trigger trigger;
+    private String[] time = new String[]{"AFTER", "BEFORE"};
+    private String[] event = new String[]{"INSERT", "UPDATE", "DELETE"};
 
     public FunctionDialog(Context context) {
         super(context);
@@ -46,6 +51,10 @@ public class FunctionDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.dialog_function);
         ButterKnife.bind(this);
         btn_confirm.setOnClickListener(this);
+        edit_time.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, time));
+        edit_event.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, event));
+        edit_time.setThreshold(1);
+        edit_event.setThreshold(1);
         if (trigger != null) {
             edit_name.setText(trigger.getTrigger());
             edit_time.setText(trigger.getTiming());
@@ -70,7 +79,10 @@ public class FunctionDialog extends Dialog implements View.OnClickListener {
                 .subscribeOn(Schedulers.io())
                 .doOnNext(integer -> App.getInstance().connectionService.createTrigger(info))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer1 -> dismiss());
+                .subscribe(integer1 -> dismiss(),
+                        throwable -> {
+                            Toast.makeText(getContext(), R.string.create_trigger_fails, Toast.LENGTH_SHORT).show();
+                        });
     }
 
     public void setTrigger(Trigger trigger) {

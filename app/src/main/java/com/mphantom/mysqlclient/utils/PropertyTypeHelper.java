@@ -18,6 +18,13 @@ public class PropertyTypeHelper {
     public static final String[] TIMES = new String[]{
             "date", "time", "datetime", "timestamp"};
 
+    public static final String[] TYPE = new String[]{
+            "tinyint(4)", "smallint(6)", "mediumint(9)", "int(11)", "bigint(20)",
+            "float", "double",
+            "char(10)", "varchar(20)", "tinytext(20)", "text(20)", "mediumtext(20)", "longtext(20)",
+            "date", "time", "datetime", "timestamp"
+    };
+
     public static int checkPropertyType(String type) {
         if (type.contains("(")) {
             type = type.substring(0, type.indexOf("("));
