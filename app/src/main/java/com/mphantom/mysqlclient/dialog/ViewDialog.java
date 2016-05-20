@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
-import com.mphantom.mysqlclient.model.Function;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,39 +20,38 @@ import rx.schedulers.Schedulers;
 /**
  * Created by wushaorong on 16-5-12.
  */
-public class FunDialog extends Dialog implements View.OnClickListener {
-    @Bind(R.id.edit_FunDialog_function)
+public class ViewDialog extends Dialog implements View.OnClickListener {
+    @Bind(R.id.edit_ViewDialog_name)
     EditText edit_name;
-    @Bind(R.id.edit_FunDialog_functioninfo)
+    @Bind(R.id.edit_ViewDialog_viewinfo)
     EditText edit_functioninfo;
-    @Bind(R.id.btn_FunDialog_confirm)
+    @Bind(R.id.btn_ViewDialog_confirm)
     Button btn_confirm;
 
 
-    public FunDialog(Context context) {
+    public ViewDialog(Context context) {
         super(context);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_fun);
+        setContentView(R.layout.dialog_view);
         ButterKnife.bind(this);
         btn_confirm.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        Function info = new Function();
-        info.setName(edit_name.getText().toString().trim());
-        info.setComment(edit_functioninfo.getText().toString().trim());
+        String name = edit_name.getText().toString().trim();
+        String viewInfo = edit_functioninfo.getText().toString().trim();
         Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
                 .subscribeOn(Schedulers.io())
-                .doOnNext(integer -> App.getInstance().connectionService.createFunction(info))
+                .doOnNext(integer -> App.getInstance().connectionService.createView(name,viewInfo))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer1 -> dismiss(),
                         throwable -> {
-                            Toast.makeText(getContext(), R.string.create_trigger_fails, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.create_View_fails, Toast.LENGTH_SHORT).show();
                         });
     }
 }

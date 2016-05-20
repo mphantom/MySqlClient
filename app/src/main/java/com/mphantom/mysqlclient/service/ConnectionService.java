@@ -77,6 +77,12 @@ public class ConnectionService extends Service {
         return null;
     }
 
+    public List<Map<String, Object>> queryWithCondition(String tablename, String condition) {
+        if (sqlConnection != null)
+            return sqlConnection.queryWithCondition(tablename, condition);
+        return null;
+    }
+
     public int queryItemCount(String tablename) {
         if (sqlConnection != null)
             return sqlConnection.queryItemCount(tablename);
@@ -135,9 +141,15 @@ public class ConnectionService extends Service {
         if (sqlConnection != null)
             sqlConnection.deleteTrigger(trigger);
     }
-    public void deleteFunction(String name){
+
+    public void deleteFunction(String name) {
         if (sqlConnection != null)
             sqlConnection.deleteFunction(name);
+    }
+
+    public void deleteView(String name) {
+        if (sqlConnection != null)
+            sqlConnection.deleteView(name);
     }
 
     public void createTrigger(Trigger trigger) {
@@ -148,5 +160,10 @@ public class ConnectionService extends Service {
     public void createFunction(Function info) {
         if (sqlConnection != null)
             sqlConnection.createFunction(info);
+    }
+
+    public void createView(String name, String viewInfo) {
+        if (sqlConnection != null)
+            sqlConnection.createView(name, viewInfo);
     }
 }

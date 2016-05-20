@@ -32,8 +32,13 @@
     <string name="time">时间</string>
     <string name="statement">事务</string>
     <string name="functionInfo">函数内容</string>
+    <string name="viewInfo">视图详情</string>
     <string name="connection_fail">连接数据库失败</string>
     <string name="connection_success">连接数据库成功</string>
     <string name="connection_first">你还未连接数据库，请先连接数据库</string>
     <string name="create_trigger_fails">触发器创建失败</string>
+    <string name="create_Function_fails">函数创建失败</string>
+    <string name="create_View_fails">视图创建失败</string>
+    <string name="filter">筛选</string>
+    <string name="condition">条件</string>
 </resources>

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
-import com.mphantom.mysqlclient.model.Function;
+import com.mphantom.mysqlclient.model.Table;
 
 import java.util.List;
 
@@ -20,34 +20,34 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by wushaorong on 16-5-12.
+ * Created by wushaorong on 16-5-21.
  */
-public class FunAdapter extends RecyclerView.Adapter<FunAdapter.FunViewHolder>
+public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.TableViewHolder>
         implements View.OnClickListener, View.OnLongClickListener, ItemTouchHelperCallback.ItemTouchHelperAdapter {
 
     private final LayoutInflater mLayoutInflater;
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
-    private List<Function> lists;
+    private List<Table> lists;
 
-    public FunAdapter(Context context, List<Function> lists) {
+    public ViewAdapter(Context context, List<Table> lists) {
         mLayoutInflater = LayoutInflater.from(context);
         this.lists = lists;
     }
 
     @Override
-    public FunViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.adapter_fun, parent, false);
+    public TableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mLayoutInflater.inflate(R.layout.adapter_table, parent, false);
         view.setOnClickListener(this);
         view.setOnLongClickListener(this);
-        return new FunViewHolder(view);
+        return new TableViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(FunViewHolder holder, int position) {
-        Function function = lists.get(position);
-        holder.tvName.setText(function.getName());
-        holder.itemView.setTag(function);
+    public void onBindViewHolder(TableViewHolder holder, int position) {
+        Table table = lists.get(position);
+        holder.tvName.setText(table.getName());
+        holder.itemView.setTag(table);
 
     }
 
@@ -63,8 +63,9 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.FunViewHolder>
 
     @Override
     public void onItemDismiss(int position) {
-        Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(position)).subscribeOn(Schedulers.io())
-                .doOnNext(integer -> App.getInstance().connectionService.deleteFunction(lists.get(integer).getName()))
+        Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(position))
+                .subscribeOn(Schedulers.io())
+                .doOnNext(integer -> App.getInstance().connectionService.deleteView(lists.get(integer).getName()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer1 -> {
                     lists.remove(position);
@@ -74,11 +75,11 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.FunViewHolder>
     }
 
 
-    public class FunViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_namevalue_funAdapter)
+    public class TableViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.tv_namevalue_tableAdapter)
         TextView tvName;
 
-        public FunViewHolder(View itemView) {
+        public TableViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

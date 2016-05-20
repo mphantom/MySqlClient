@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
@@ -33,11 +35,17 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
     RecyclerView recyclerView;
     @Bind(R.id.fab_tableA)
     FloatingActionButton floatButton;
+    @Bind(R.id.edit_tableA)
+    EditText editText;
+    @Bind(R.id.btn_tableA)
+    Button btnSubmit;
+
 
     private List<TableProperty> listProperty;
     private List<Map<String, Object>> listdata;
     private String tableName;
     private ItemTouchHelper mItemTouchHelper;
+    DataAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,15 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
         Intent fromIntent = getIntent();
         tableName = fromIntent.getStringExtra("tableName");
         floatButton.setOnClickListener(this);
+        btnSubmit.setOnClickListener(this);
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        toolbar.setTitle("表：" + tableName);
         Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
                 .subscribeOn(Schedulers.io())
                 .doOnNext(aLong -> {
@@ -58,7 +75,7 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong1 -> {
                     recyclerView.setLayoutManager(new LinearLayoutManager(TableActivity.this));
-                    DataAdapter adapter = new DataAdapter(TableActivity.this, listProperty, listdata);
+                    adapter = new DataAdapter(TableActivity.this, listProperty, listdata);
                     recyclerView.setAdapter(adapter);
                     adapter.setTableName(tableName);
                     adapter.setOnItemClickListener((view1, object) -> {
@@ -71,20 +88,33 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
                     mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
                     mItemTouchHelper.attachToRecyclerView(recyclerView);
                 });
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        toolbar.setTitle("表：" + tableName);
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(this, TableColumnActivity.class);
-        intent.putExtra("tableName", tableName);
-        intent.putExtra("newColume", true);
-        startActivity(intent);
+        switch (v.getId()) {
+            case R.id.recycler_tableA:
+                Intent intent = new Intent(this, TableColumnActivity.class);
+                intent.putExtra("tableName", tableName);
+                intent.putExtra("newColume", true);
+                startActivity(intent);
+                break;
+            case R.id.btn_tableA:
+                String conditon = editText.getText().toString().trim();
+                Observable.create((Observable.OnSubscribe<Integer>) onSubscribe -> onSubscribe.onNext(1))
+                        .subscribeOn(Schedulers.io())
+                        .map(integer -> App.getInstance().connectionService.queryWithCondition(tableName, conditon))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(list -> {
+                            listdata.clear();
+                            listdata.addAll(list);
+                            adapter.notifyDataSetChanged();
+                        });
+
+                break;
+        }
+
     }
+
+
 }

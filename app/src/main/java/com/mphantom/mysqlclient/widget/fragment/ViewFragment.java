@@ -1,5 +1,6 @@
 package com.mphantom.mysqlclient.widget.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -13,7 +14,9 @@ import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.adapter.ItemTouchHelperCallback;
 import com.mphantom.mysqlclient.adapter.TableAdapter;
+import com.mphantom.mysqlclient.dialog.ViewDialog;
 import com.mphantom.mysqlclient.model.Table;
+import com.mphantom.mysqlclient.widget.activity.table.TableActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +29,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by wushaorong on 16-5-12.
  */
-public class ViewFragment extends BaseFragment {
+public class ViewFragment extends BaseFragment implements View.OnClickListener {
     @Bind(R.id.recycler_viewF)
     RecyclerView recyclerView;
     @Bind(R.id.float_viewF)
@@ -50,8 +53,7 @@ public class ViewFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        floatButton.setOnClickListener(v -> {
-        });
+        floatButton.setOnClickListener(this);
 
     }
 
@@ -70,6 +72,9 @@ public class ViewFragment extends BaseFragment {
                         recyclerView.setLayoutManager(new LinearLayoutManager(context));
                         TableAdapter adapter = new TableAdapter(context, getView(tables));
                         adapter.setOnItemClickListener((view1, object) -> {
+                            Intent intent = new Intent(context, TableActivity.class);
+                            intent.putExtra("tableName", ((Table) object).getName());
+                            context.startActivity(intent);
 
                         });
                         adapter.setOnItemLongClickListener((view2, object1) -> {
@@ -94,5 +99,11 @@ public class ViewFragment extends BaseFragment {
             }
         }
         return tablesList;
+    }
+
+    @Override
+    public void onClick(View v) {
+        ViewDialog dialog = new ViewDialog(context);
+        dialog.show();
     }
 }

@@ -209,6 +209,19 @@ public class SqlConnection {
         getJdbcTemplate().execute(sql);
     }
 
+    public void createView(String name, String viewInfo) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CREATE VIEW  ").append("name").append(" AS ")
+                .append(viewInfo);
+        String sql = sb.toString();
+        getJdbcTemplate().execute(sql);
+    }
+
+    public void deleteView(String name) {
+        String sql = "DROP VIEW IF EXISTS " + name;
+        getJdbcTemplate().execute(sql);
+    }
+
     public void createTable(String tablename, List<TableProperty> list) {
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE").append(" ");
@@ -270,6 +283,13 @@ public class SqlConnection {
     public List<Map<String, Object>> queryAll(String tablename, int page, int pagesize) {
         int offset = (page - 1) * pagesize;
         String sql = "select * from " + tablename + " limit " + pagesize + " offset " + offset;
+        List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
+        debug(sql, list);
+        return list;
+    }
+
+    public List<Map<String, Object>> queryWithCondition(String tablename, String condition) {
+        String sql = "select * from " + tablename + " Where " + condition;
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
         debug(sql, list);
         return list;
