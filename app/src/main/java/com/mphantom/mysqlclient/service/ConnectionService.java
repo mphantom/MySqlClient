@@ -6,6 +6,7 @@ import android.os.IBinder;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.core.SqlConnection;
+import com.mphantom.mysqlclient.model.Function;
 import com.mphantom.mysqlclient.model.Table;
 import com.mphantom.mysqlclient.model.TableProperty;
 import com.mphantom.mysqlclient.model.Trigger;
@@ -124,9 +125,19 @@ public class ConnectionService extends Service {
         return null;
     }
 
+    public List<Function> showFunctions() {
+        if (sqlConnection != null)
+            return sqlConnection.showFunctions();
+        return null;
+    }
+
     public void deleteTrigger(String trigger) {
         if (sqlConnection != null)
             sqlConnection.deleteTrigger(trigger);
+    }
+    public void deleteFunction(String name){
+        if (sqlConnection != null)
+            sqlConnection.deleteFunction(name);
     }
 
     public void createTrigger(Trigger trigger) {
@@ -134,4 +145,8 @@ public class ConnectionService extends Service {
             sqlConnection.createTrigger(trigger);
     }
 
+    public void createFunction(Function info) {
+        if (sqlConnection != null)
+            sqlConnection.createFunction(info);
+    }
 }

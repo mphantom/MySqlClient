@@ -3,6 +3,7 @@ package com.mphantom.mysqlclient.core;
 import android.util.Log;
 
 import com.mphantom.mysqlclient.model.Database;
+import com.mphantom.mysqlclient.model.Function;
 import com.mphantom.mysqlclient.model.Table;
 import com.mphantom.mysqlclient.model.TableProperty;
 import com.mphantom.mysqlclient.model.ConnectionInfo;
@@ -126,6 +127,31 @@ public class SqlConnection {
         return tblist;
     }
 
+    public List<Function> showFunctions() {
+        String sql = "SHOW FUNCTION STATUS";
+        List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
+        debug(sql, list);
+        List<Function> functions = new ArrayList<>();
+        Iterator<Map<String, Object>> it = list.iterator();
+        while (it.hasNext()) {
+            Map<String, Object> map = it.next();
+            Function function = new Function();
+            function.setDb(getValue(map, "Db"));
+            function.setName(getValue(map, "Name"));
+            function.setType(getValue(map, "Type"));
+            function.setDefiner(getValue(map, "Definer"));
+            function.setModified(getValue(map, "Modified"));
+            function.setCreated(getValue(map, "Created"));
+            function.setSecurity_type(getValue(map, "Security_type"));
+            function.setComment(getValue(map, "Comment"));
+            function.setCharacter_set_client(getValue(map, "character_set_client"));
+            function.setCollation_connection(getValue(map, "collation_connection"));
+            function.setDatabase_collation(getValue(map, "Database Collation"));
+            functions.add(function);
+        }
+        return functions;
+    }
+
     public List<Trigger> showTriggers() {
         String sql = "show triggers";
         List<Map<String, Object>> list = getJdbcTemplate().queryForList(sql);
@@ -166,6 +192,20 @@ public class SqlConnection {
 
     public void deleteTrigger(String trigger) {
         String sql = "DROP TRIGGER IF EXISTS " + trigger;
+        getJdbcTemplate().execute(sql);
+    }
+
+    public void createFunction(Function info) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" CREATE FUNCTION ").append(info.getName())
+                .append(" ").append(info.getComment());
+        String sql = sb.toString();
+        getJdbcTemplate().execute(sql);
+
+    }
+
+    public void deleteFunction(String name) {
+        String sql = "DROP FUNCTION IF EXISTS " + name;
         getJdbcTemplate().execute(sql);
     }
 
@@ -284,4 +324,6 @@ public class SqlConnection {
     private void debug(String sql) {
         Log.d("clientDebug", "sql" + "-->" + sql);
     }
+
+
 }

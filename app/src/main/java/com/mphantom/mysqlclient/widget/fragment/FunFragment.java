@@ -11,10 +11,9 @@ import android.widget.TextView;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
-import com.mphantom.mysqlclient.adapter.FunctionAdapter;
+import com.mphantom.mysqlclient.adapter.FunAdapter;
 import com.mphantom.mysqlclient.adapter.ItemTouchHelperCallback;
-import com.mphantom.mysqlclient.dialog.FunctionDialog;
-import com.mphantom.mysqlclient.model.Trigger;
+import com.mphantom.mysqlclient.dialog.FunDialog;
 
 import butterknife.Bind;
 import rx.Observable;
@@ -59,16 +58,11 @@ public class FunFragment extends BaseFragment implements View.OnClickListener {
             float_btn.setVisibility(View.VISIBLE);
             Observable.create((Observable.OnSubscribe<Integer>) subscriber -> subscriber.onNext(1))
                     .subscribeOn(Schedulers.io())
-                    .map(aLong1 -> App.getInstance().connectionService.showTriggers())
+                    .map(aLong1 -> App.getInstance().connectionService.showFunctions())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(triggers -> {
                         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                        FunctionAdapter adapter = new FunctionAdapter(context, triggers);
-                        adapter.setOnItemLongClickListener((view2, object1) -> {
-                            FunctionDialog dialog = new FunctionDialog(context);
-                            dialog.setTrigger((Trigger) object1);
-                            dialog.show();
-                        });
+                        FunAdapter adapter = new FunAdapter(context, triggers);
                         recyclerView.setAdapter(adapter);
                         mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
                         mItemTouchHelper.attachToRecyclerView(recyclerView);
@@ -82,7 +76,7 @@ public class FunFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        FunctionDialog dialog = new FunctionDialog(context);
+        FunDialog dialog = new FunDialog(context);
         dialog.show();
     }
 }

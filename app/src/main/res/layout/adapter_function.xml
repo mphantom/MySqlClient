@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="clip_vertical"
             android:layout_margin="20dp"
-            android:text="@string/functions" />
+            android:text="@string/trigger" />
 
         <TextView
             android:id="@+id/tv_namevalue_functionAdapter"
