@@ -7,7 +7,8 @@
     <string name="tablename">表名</string>
     <string name="view">视图</string>
     <string name="ssh">ssh连接</string>
-    <string name="functions">触发器</string>
+    <string name="functions">函数</string>
+    <string name="trigger">触发器</string>
     <string name="setting">设置</string>
     <string name="home">主页</string>
     <string name="nick">昵称</string>

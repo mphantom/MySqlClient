@@ -19,6 +19,7 @@ import com.mphantom.mysqlclient.core.SqlConnection;
 import com.mphantom.mysqlclient.dialog.ConnectionDialog;
 import com.mphantom.mysqlclient.model.ConnectionInfo;
 import com.mphantom.mysqlclient.utils.OnConfirm;
+import com.mphantom.mysqlclient.widget.activity.MainActivity;
 
 import butterknife.Bind;
 import rx.Observable;
@@ -75,7 +76,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer1 -> {
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(context,R.string.connection_success,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.connection_success, Toast.LENGTH_SHORT).show();
+                    ((MainActivity) context).setHostInfo(((ConnectionInfo) object).getName(), ((ConnectionInfo) object).getHost());
                 }, throwable -> {
                     Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
                 });

@@ -15,6 +15,14 @@
             android:icon="@drawable/ic_subtitles_black_18dp"
             android:title="@string/view" />
         <item
+            android:id="@+id/navigation_fun"
+            android:icon="@drawable/ic_subtitles_black_18dp"
+            android:title="@string/functions" />
+        <item
+            android:id="@+id/navigation_functions"
+            android:icon="@drawable/ic_view_list_black_18dp"
+            android:title="@string/trigger" />
+        <item
             android:id="@+id/navigation_consule"
             android:icon="@drawable/ic_business_black_18dp"
             android:title="@string/consule" />
@@ -23,10 +31,7 @@
             android:icon="@drawable/ic_business_black_18dp"
             android:title="@string/ssh" />
         <!--android:visible="false" />-->
-        <item
-            android:id="@+id/navigation_functions"
-            android:icon="@drawable/ic_view_list_black_18dp"
-            android:title="@string/functions" />
+
         <item
             android:id="@+id/navigation_setting"
             android:icon="@drawable/ic_view_list_black_18dp"

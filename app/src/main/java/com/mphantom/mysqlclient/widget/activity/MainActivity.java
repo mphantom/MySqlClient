@@ -8,8 +8,8 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.mphantom.mysqlclient.R;
-import com.mphantom.mysqlclient.utils.Constant;
 import com.mphantom.mysqlclient.widget.fragment.ConsoleFragment;
+import com.mphantom.mysqlclient.widget.fragment.FunFragment;
 import com.mphantom.mysqlclient.widget.fragment.FunctionFragment;
 import com.mphantom.mysqlclient.widget.fragment.HomeFragment;
 import com.mphantom.mysqlclient.widget.fragment.SshFragment;
@@ -64,6 +64,14 @@ public class MainActivity extends BaseActivity {
                     changeFragment(currentIndex, new ViewFragment(), "ViewFragment");
                     drawerLayout.closeDrawers();
                     return true;
+                case R.id.navigation_fun:
+                    item.setChecked(true);
+                    title = item.getTitle();
+                    toolbar.setTitle(title);
+                    currentIndex = item.getItemId();
+                    changeFragment(currentIndex, new FunFragment(), "FunFragment");
+                    drawerLayout.closeDrawers();
+                    return true;
                 case R.id.navigation_consule:
                     item.setChecked(true);
                     title = item.getTitle();
@@ -99,14 +107,19 @@ public class MainActivity extends BaseActivity {
         headView = navigationView.getHeaderView(0);
         tv_hostInfo = (TextView) headView.findViewById(R.id.tv_hostinfo_mainA);
         tv_nick = (TextView) headView.findViewById(R.id.tv_nick_mainA);
-        tv_hostInfo.setText(Constant.DEFAULT_HOST);
-        tv_nick.setText("BOB");
+        tv_hostInfo.setText("未连接");
+        tv_nick.setText("未知");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         toolbar.setTitle(title);
+    }
+
+    public void setHostInfo(String nick, String host) {
+        tv_hostInfo.setText(host);
+        tv_nick.setText(nick);
     }
 
     @Override
