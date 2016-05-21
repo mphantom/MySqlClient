@@ -48,10 +48,10 @@
             android:layout_weight="1">
 
             <EditText
+                android:id="@+id/edit_TableA_confition"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:hint="@string/condition"
-                android:text="@+id/edit_tableA" />
+                android:hint="@string/condition" />
         </android.support.design.widget.TextInputLayout>
 
         <Button

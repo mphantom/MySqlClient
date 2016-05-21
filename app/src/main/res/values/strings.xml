@@ -41,4 +41,7 @@
     <string name="create_View_fails">视图创建失败</string>
     <string name="filter">筛选</string>
     <string name="condition">条件</string>
+    <string name="ssh_connection_success">ssh连接成功</string>
+    <string name="ssh_connection_fauli">ssh连接失败</string>
+    <string name="error_sql">数据库操作错误</string>
 </resources>

@@ -35,7 +35,7 @@ public class TableActivity extends AppCompatActivity implements View.OnClickList
     RecyclerView recyclerView;
     @Bind(R.id.fab_tableA)
     FloatingActionButton floatButton;
-    @Bind(R.id.edit_tableA)
+    @Bind(R.id.edit_TableA_confition)
     EditText editText;
     @Bind(R.id.btn_tableA)
     Button btnSubmit;

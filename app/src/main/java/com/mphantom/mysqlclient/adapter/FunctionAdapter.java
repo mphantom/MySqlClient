@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
@@ -29,8 +30,10 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.Functi
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
     private List<Trigger> lists;
+    private Context context;
 
     public FunctionAdapter(Context context, List<Trigger> lists) {
+        this.context = context;
         mLayoutInflater = LayoutInflater.from(context);
         this.lists = lists;
     }
@@ -72,7 +75,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.Functi
                 .subscribe(integer1 -> {
                     lists.remove(position);
                     notifyDataSetChanged();
-                });
+                }, throwable -> Toast.makeText(context, R.string.error_sql, Toast.LENGTH_SHORT).show());
 
     }
 

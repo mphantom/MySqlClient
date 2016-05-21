@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
@@ -82,6 +83,8 @@ public class ViewFragment extends BaseFragment implements View.OnClickListener {
                         recyclerView.setAdapter(adapter);
                         mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
                         mItemTouchHelper.attachToRecyclerView(recyclerView);
+                    }, throwable -> {
+                        Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
                     });
         } else {
             recyclerView.setVisibility(View.GONE);

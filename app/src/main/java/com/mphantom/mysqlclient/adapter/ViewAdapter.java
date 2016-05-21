@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
@@ -20,7 +21,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by wushaorong on 16-5-21.
+ * Created by wushaorong on 16-5-12.
  */
 public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.TableViewHolder>
         implements View.OnClickListener, View.OnLongClickListener, ItemTouchHelperCallback.ItemTouchHelperAdapter {
@@ -29,8 +30,10 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.TableViewHolde
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
     private List<Table> lists;
+    private Context context;
 
     public ViewAdapter(Context context, List<Table> lists) {
+        this.context = context;
         mLayoutInflater = LayoutInflater.from(context);
         this.lists = lists;
     }
@@ -70,7 +73,7 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.TableViewHolde
                 .subscribe(integer1 -> {
                     lists.remove(position);
                     notifyDataSetChanged();
-                });
+                }, throwable -> Toast.makeText(context, R.string.error_sql, Toast.LENGTH_SHORT).show());
 
     }
 

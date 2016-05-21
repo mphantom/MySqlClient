@@ -3,6 +3,7 @@ package com.mphantom.mysqlclient.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -69,7 +70,11 @@ public class ConnectionDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         ConnectionInfo info = new ConnectionInfo();
-        info.setUuid(UUID.randomUUID().toString());
+        if (connectionInfo != null && !TextUtils.isEmpty(connectionInfo.getUuid())) {
+            info.setUuid(connectionInfo.getUuid());
+        } else {
+            info.setUuid(UUID.randomUUID().toString());
+        }
         info.setName(edit_nick.getText().toString().trim());
         info.setHost(edit_host.getText().toString().trim());
         info.setPort(Integer.parseInt(edit_port.getText().toString().trim()));
