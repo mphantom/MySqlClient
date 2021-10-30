@@ -22,7 +22,7 @@ import com.mphantom.mysqlclient.widget.activity.table.TableActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -31,11 +31,11 @@ import rx.schedulers.Schedulers;
  * Created by wushaorong on 16-5-12.
  */
 public class ViewFragment extends BaseFragment implements View.OnClickListener {
-    @Bind(R.id.recycler_viewF)
+    @BindView(R.id.recycler_viewF)
     RecyclerView recyclerView;
-    @Bind(R.id.float_viewF)
+    @BindView(R.id.float_viewF)
     FloatingActionButton floatButton;
-    @Bind(R.id.tv_viewF)
+    @BindView(R.id.tv_viewF)
     TextView tvTip;
 
     private ItemTouchHelper mItemTouchHelper;

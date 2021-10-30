@@ -26,7 +26,7 @@ import com.mphantom.mysqlclient.utils.OnConfirm;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -37,13 +37,13 @@ import rx.schedulers.Schedulers;
  */
 public class TablePropertyActivity extends AppCompatActivity
         implements View.OnClickListener, OnConfirm, OnItemDismissListener, OnItemClickListener {
-    @Bind(R.id.btn_confirm_tablePropertyA)
+    @BindView(R.id.btn_confirm_tablePropertyA)
     Button btn_confirm;
-    @Bind(R.id.recycler_tablePropertyA)
+    @BindView(R.id.recycler_tablePropertyA)
     RecyclerView recyclerView;
-    @Bind(R.id.edit_tablename_tablePropertyA)
+    @BindView(R.id.edit_tablename_tablePropertyA)
     EditText edit_tableName;
-    @Bind(R.id.float_tablePropertyA)
+    @BindView(R.id.float_tablePropertyA)
     FloatingActionButton float_btn;
 
     private String tableName;

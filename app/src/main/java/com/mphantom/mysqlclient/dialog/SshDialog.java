@@ -14,24 +14,24 @@ import com.mphantom.mysqlclient.utils.OnConfirm;
 
 import java.util.UUID;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by wushaorong on 16-5-12.
  */
 public class SshDialog extends Dialog implements View.OnClickListener {
-    @Bind(R.id.edit_sshDialog_nick)
+    @BindView(R.id.edit_sshDialog_nick)
     EditText edit_nick;
-    @Bind(R.id.edit_sshDialog_host)
+    @BindView(R.id.edit_sshDialog_host)
     EditText edit_host;
-    @Bind(R.id.edit_sshDialog_port)
+    @BindView(R.id.edit_sshDialog_port)
     EditText edit_port;
-    @Bind(R.id.edit_sshDialog_name)
+    @BindView(R.id.edit_sshDialog_name)
     EditText edit_name;
-    @Bind(R.id.edit_sshDialog_password)
+    @BindView(R.id.edit_sshDialog_password)
     EditText edit_password;
-    @Bind(R.id.btn_sshDialog_confirm)
+    @BindView(R.id.btn_sshDialog_confirm)
     Button btn_confirm;
     private OnConfirm onConfirm;
 

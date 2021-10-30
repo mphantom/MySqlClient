@@ -12,7 +12,7 @@ import com.mphantom.mysqlclient.model.TableProperty;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -82,17 +82,17 @@ public class TablePropertyAdapter extends RecyclerView.Adapter<TablePropertyAdap
     }
 
     class TablePropertyViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_field_tableProperty)
+        @BindView(R.id.tv_field_tableProperty)
         TextView tv_field;
-        @Bind(R.id.tv_type_tableProperty)
+        @BindView(R.id.tv_type_tableProperty)
         TextView tv_type;
-        @Bind(R.id.tv_null_tableProperty)
+        @BindView(R.id.tv_null_tableProperty)
         TextView tv_null;
-        @Bind(R.id.tv_key_tableProperty)
+        @BindView(R.id.tv_key_tableProperty)
         TextView tv_key;
-        @Bind(R.id.tv_default_tableProperty)
+        @BindView(R.id.tv_default_tableProperty)
         TextView tv_default;
-        @Bind(R.id.tv_extra_tableProperty)
+        @BindView(R.id.tv_extra_tableProperty)
         TextView tv_extra;
 
         public TablePropertyViewHolder(View itemView) {

@@ -15,26 +15,25 @@ import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.adapter.ConsoleAdapter;
 import com.mphantom.mysqlclient.utils.Constant;
 
-import org.springframework.jdbc.BadSqlGrammarException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ConsoleFragment extends BaseFragment implements View.OnClickListener {
-    @Bind(R.id.recycler_ConsoleF)
+    @BindView(R.id.recycler_ConsoleF)
     RecyclerView recyclerview;
-    @Bind(R.id.edit_consoleF_input)
+    @BindView(R.id.edit_consoleF_input)
     EditText edit_input;
-    @Bind(R.id.btn_consoleF_submit)
+    @BindView(R.id.btn_consoleF_submit)
     Button btn_submit;
-    @Bind(R.id.tv_ConsoleF)
+    @BindView(R.id.tv_ConsoleF)
     TextView tvTip;
     private ConsoleAdapter adapter;
     private List<String> lists;
@@ -103,14 +102,8 @@ public class ConsoleFragment extends BaseFragment implements View.OnClickListene
                         adapter.notifyDataSetChanged();
                     }
                 }, throwable -> {
-                    if (throwable instanceof BadSqlGrammarException) {
-                        String error = ((BadSqlGrammarException) throwable).getSQLException().getMessage();
-                        lists.add(error);
-                        adapter.notifyDataSetChanged();
-                    } else {
                         lists.add("无法发送到数据库");
                         adapter.notifyDataSetChanged();
-                    }
                 });
     }
 

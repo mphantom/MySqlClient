@@ -76,14 +76,14 @@ public class ConnectionHelper {
     public void delete(String uuid) {
         realm.beginTransaction();
         RealmResults<ConnectionInfo> results = realm.where(ConnectionInfo.class).equalTo("uuid", uuid).findAll();
-        results.clear();
+        results.deleteAllFromRealm();
         realm.commitTransaction();
     }
 
     public void deleteAll() {
         realm.beginTransaction();
         RealmResults<ConnectionInfo> results = realm.where(ConnectionInfo.class).findAll();
-        results.clear();
+        results.deleteAllFromRealm();
         realm.commitTransaction();
     }
 }

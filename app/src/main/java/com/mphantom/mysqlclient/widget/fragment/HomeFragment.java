@@ -21,7 +21,7 @@ import com.mphantom.mysqlclient.model.ConnectionInfo;
 import com.mphantom.mysqlclient.utils.OnConfirm;
 import com.mphantom.mysqlclient.widget.activity.MainActivity;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -30,9 +30,9 @@ import rx.schedulers.Schedulers;
  * Created by wushaorong on 16-5-2.
  */
 public class HomeFragment extends BaseFragment implements OnItemClickListener, OnItemLongClickListener, OnConfirm {
-    @Bind(R.id.recycler_homeF)
+    @BindView(R.id.recycler_homeF)
     RecyclerView recyclerView;
-    @Bind(R.id.float_homeF)
+    @BindView(R.id.float_homeF)
     FloatingActionButton floatButton;
     private ConnectionAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;

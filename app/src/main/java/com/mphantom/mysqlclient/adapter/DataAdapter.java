@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -120,13 +120,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
     }
 
     public class DataViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_param1_dataAdapter)
+        @BindView(R.id.tv_param1_dataAdapter)
         TextView tvParam1;
-        @Bind(R.id.tv_param2_dataAdapter)
+        @BindView(R.id.tv_param2_dataAdapter)
         TextView tvParam2;
-        @Bind(R.id.tv_param3_dataAdapter)
+        @BindView(R.id.tv_param3_dataAdapter)
         TextView tvParam3;
-        @Bind(R.id.tv_param4_dataAdapter)
+        @BindView(R.id.tv_param4_dataAdapter)
         TextView tvParam4;
         List<TextView> tv_list;
 

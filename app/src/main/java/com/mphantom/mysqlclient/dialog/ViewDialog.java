@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -21,11 +21,11 @@ import rx.schedulers.Schedulers;
  * Created by wushaorong on 16-5-12.
  */
 public class ViewDialog extends Dialog implements View.OnClickListener {
-    @Bind(R.id.edit_ViewDialog_name)
+    @BindView(R.id.edit_ViewDialog_name)
     EditText edit_name;
-    @Bind(R.id.edit_ViewDialog_viewinfo)
+    @BindView(R.id.edit_ViewDialog_viewinfo)
     EditText edit_functioninfo;
-    @Bind(R.id.btn_ViewDialog_confirm)
+    @BindView(R.id.btn_ViewDialog_confirm)
     Button btn_confirm;
 
 

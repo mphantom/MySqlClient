@@ -14,7 +14,7 @@ import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.model.Trigger;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,17 +24,17 @@ import rx.schedulers.Schedulers;
  * Created by wushaorong on 16-5-13.
  */
 public class FunctionDialog extends Dialog implements View.OnClickListener {
-    @Bind(R.id.edit_FunctionDialog_name)
+    @BindView(R.id.edit_FunctionDialog_name)
     EditText edit_name;
-    @Bind(R.id.edit_Functiondialog_time)
+    @BindView(R.id.edit_Functiondialog_time)
     AutoCompleteTextView edit_time;
-    @Bind(R.id.edit_FunctionDialog_event)
+    @BindView(R.id.edit_FunctionDialog_event)
     AutoCompleteTextView edit_event;
-    @Bind(R.id.edit_FunctionDialog_table)
+    @BindView(R.id.edit_FunctionDialog_table)
     EditText edit_table;
-    @Bind(R.id.edit_FunctionDialog_statement)
+    @BindView(R.id.edit_FunctionDialog_statement)
     EditText edit_statement;
-    @Bind(R.id.btn_FunctionDialog_confirm)
+    @BindView(R.id.btn_FunctionDialog_confirm)
     Button btn_confirm;
 
     private Trigger trigger;

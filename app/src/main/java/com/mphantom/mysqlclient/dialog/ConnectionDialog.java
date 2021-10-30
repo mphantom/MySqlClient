@@ -16,26 +16,26 @@ import com.mphantom.mysqlclient.utils.OnConfirm;
 
 import java.util.UUID;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by wushaorong on 16-5-11.
  */
 public class ConnectionDialog extends Dialog implements View.OnClickListener {
-    @Bind(R.id.edit_databaseDialgo_nick)
+    @BindView(R.id.edit_databaseDialgo_nick)
     EditText edit_nick;
-    @Bind(R.id.edit_databaseDialgo_host)
+    @BindView(R.id.edit_databaseDialgo_host)
     EditText edit_host;
-    @Bind(R.id.edit_databaseDialgo_port)
+    @BindView(R.id.edit_databaseDialgo_port)
     EditText edit_port;
-    @Bind(R.id.edit_databaseDialgo_user)
+    @BindView(R.id.edit_databaseDialgo_user)
     EditText edit_user;
-    @Bind(R.id.edit_databaseDialgo_database)
+    @BindView(R.id.edit_databaseDialgo_database)
     EditText edit_database;
-    @Bind(R.id.edit_databaseDialgo_password)
+    @BindView(R.id.edit_databaseDialgo_password)
     EditText edit_password;
-    @Bind(R.id.btn_databaseDialog_confirm)
+    @BindView(R.id.btn_databaseDialog_confirm)
     Button btn_confirm;
 
     private ConnectionInfo connectionInfo;

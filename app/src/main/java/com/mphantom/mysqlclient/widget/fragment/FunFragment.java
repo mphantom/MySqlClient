@@ -15,7 +15,7 @@ import com.mphantom.mysqlclient.adapter.FunAdapter;
 import com.mphantom.mysqlclient.adapter.ItemTouchHelperCallback;
 import com.mphantom.mysqlclient.dialog.FunDialog;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -24,11 +24,11 @@ import rx.schedulers.Schedulers;
  * Created by wushaorong on 16-5-12.
  */
 public class FunFragment extends BaseFragment implements View.OnClickListener {
-    @Bind(R.id.recycler_FunF)
+    @BindView(R.id.recycler_FunF)
     RecyclerView recyclerView;
-    @Bind(R.id.float_FunF)
+    @BindView(R.id.float_FunF)
     FloatingActionButton float_btn;
-    @Bind(R.id.tv_FunF)
+    @BindView(R.id.tv_FunF)
     TextView tvTip;
 
     private ItemTouchHelper mItemTouchHelper;

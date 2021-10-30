@@ -16,26 +16,26 @@ import com.mphantom.mysqlclient.model.TableProperty;
 import com.mphantom.mysqlclient.utils.OnConfirm;
 import com.mphantom.mysqlclient.utils.PropertyTypeHelper;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by wushaorong on 16-5-12.
  */
 public class TablePropertyDialog extends Dialog implements View.OnClickListener {
-    @Bind(R.id.edit_tablePropertyDialog_file)
+    @BindView(R.id.edit_tablePropertyDialog_file)
     EditText edit_file;
-    @Bind(R.id.edit_tablePropertyDialog_type)
+    @BindView(R.id.edit_tablePropertyDialog_type)
     AutoCompleteTextView edit_type;
-    @Bind(R.id.edit_tablePropertyDialog_default)
+    @BindView(R.id.edit_tablePropertyDialog_default)
     EditText edit_default;
-    @Bind(R.id.check_tablePropertyDialog_autoInc)
+    @BindView(R.id.check_tablePropertyDialog_autoInc)
     CheckBox check_autoInc;
-    @Bind(R.id.check_tablePropertyDialog_primaryKey)
+    @BindView(R.id.check_tablePropertyDialog_primaryKey)
     CheckBox check_primaryKey;
-    @Bind(R.id.check_tablePropertyDialog_notNull)
+    @BindView(R.id.check_tablePropertyDialog_notNull)
     CheckBox check_notNull;
-    @Bind(R.id.btn_tablePropertyDialog_confirm)
+    @BindView(R.id.btn_tablePropertyDialog_confirm)
     Button btn_confirm;
 
     private OnConfirm onConfirm;

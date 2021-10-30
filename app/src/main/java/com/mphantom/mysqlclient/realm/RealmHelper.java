@@ -1,7 +1,5 @@
 package com.mphantom.mysqlclient.realm;
 
-import com.mphantom.mysqlclient.App;
-
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
@@ -25,7 +23,7 @@ public class RealmHelper {
     };
 
     private RealmHelper() {
-        RealmConfiguration config = new RealmConfiguration.Builder(App.getInstance())
+        RealmConfiguration config = new RealmConfiguration.Builder()
                 .name(DATABASE_NAME)
                 .schemaVersion(DATABASE_VERSION)
                 .migration(mRealmMigration)

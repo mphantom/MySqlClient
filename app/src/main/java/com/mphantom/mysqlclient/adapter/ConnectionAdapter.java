@@ -12,7 +12,7 @@ import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.model.ConnectionInfo;
 import com.mphantom.mysqlclient.realm.ConnectionHelper;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmResults;
 import rx.Observable;
@@ -103,11 +103,11 @@ public class ConnectionAdapter extends AbstractRealmAdapter<ConnectionInfo, Conn
 
 
     public class ConnectionViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_homevalue_dataAdapter)
+        @BindView(R.id.tv_homevalue_dataAdapter)
         TextView tvHome;
-        @Bind(R.id.tv_namevalue_dataAdapter)
+        @BindView(R.id.tv_namevalue_dataAdapter)
         TextView tvName;
-        @Bind(R.id.card_layout_dataAdapter)
+        @BindView(R.id.card_layout_dataAdapter)
         CardView cardView;
 
         public ConnectionViewHolder(View itemView) {

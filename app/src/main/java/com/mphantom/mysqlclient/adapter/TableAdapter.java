@@ -13,7 +13,7 @@ import com.mphantom.mysqlclient.model.Table;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -76,7 +76,7 @@ public class TableAdapter extends RecyclerView.Adapter<TableAdapter.TableViewHol
 
 
     public class TableViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_namevalue_tableAdapter)
+        @BindView(R.id.tv_namevalue_tableAdapter)
         TextView tvName;
 
         public TableViewHolder(View itemView) {

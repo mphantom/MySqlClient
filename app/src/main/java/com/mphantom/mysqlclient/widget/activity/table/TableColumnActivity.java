@@ -21,16 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class TableColumnActivity extends AppCompatActivity implements View.OnClickListener {
-    @Bind(R.id.btn_submit_tableColumnA)
+    @BindView(R.id.btn_submit_tableColumnA)
     Button btn_submit;
-    @Bind(R.id.layout_contant_tableColumnA)
+    @BindView(R.id.layout_contant_tableColumnA)
     LinearLayout layout_contant;
     private List<TableProperty> list;
     private List<EditText> listEdit;

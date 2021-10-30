@@ -19,12 +19,12 @@ import com.mphantom.mysqlclient.model.SshUser;
 import com.mphantom.mysqlclient.utils.OnConfirm;
 import com.mphantom.mysqlclient.widget.activity.SshActivity;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class SshFragment extends BaseFragment implements OnConfirm, OnItemClickListener, OnItemLongClickListener {
-    @Bind(R.id.recycler_SSHF)
+    @BindView(R.id.recycler_SSHF)
     RecyclerView recyclerview;
-    @Bind(R.id.float_SSHF)
+    @BindView(R.id.float_SSHF)
     FloatingActionButton float_btn;
     private SshAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;

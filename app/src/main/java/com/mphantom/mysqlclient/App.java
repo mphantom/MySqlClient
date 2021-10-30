@@ -10,6 +10,8 @@ import com.mphantom.mysqlclient.service.SshService;
 
 import java.util.List;
 
+import io.realm.Realm;
+
 /**
  * Created by wushaorong on 16-5-10.
  */
@@ -33,6 +35,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        Realm.init(this);
         startService(new Intent(this, ConnectionService.class));
         startService(new Intent(this, SshService.class));
 //        Observable.timer(2, TimeUnit.SECONDS)

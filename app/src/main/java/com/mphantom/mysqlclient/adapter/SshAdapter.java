@@ -11,7 +11,7 @@ import com.mphantom.mysqlclient.model.SshUser;
 import com.mphantom.mysqlclient.realm.ConnectionHelper;
 import com.mphantom.mysqlclient.realm.SshUserHelper;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmResults;
 
@@ -88,9 +88,9 @@ public class SshAdapter extends AbstractRealmAdapter<SshUser, SshAdapter.SshView
 
 
     public class SshViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_homevalue_sshAdapter)
+        @BindView(R.id.tv_homevalue_sshAdapter)
         TextView tvHome;
-        @Bind(R.id.tv_namevalue_sshAdapter)
+        @BindView(R.id.tv_namevalue_sshAdapter)
         TextView tvName;
 
         public SshViewHolder(View itemView) {

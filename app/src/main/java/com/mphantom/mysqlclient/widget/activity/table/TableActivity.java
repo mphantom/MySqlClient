@@ -22,22 +22,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class TableActivity extends AppCompatActivity implements View.OnClickListener {
-    @Bind(R.id.toolbar_tableA)
+    @BindView(R.id.toolbar_tableA)
     Toolbar toolbar;
-    @Bind(R.id.recycler_tableA)
+    @BindView(R.id.recycler_tableA)
     RecyclerView recyclerView;
-    @Bind(R.id.fab_tableA)
+    @BindView(R.id.fab_tableA)
     FloatingActionButton floatButton;
-    @Bind(R.id.edit_TableA_confition)
+    @BindView(R.id.edit_TableA_confition)
     EditText editText;
-    @Bind(R.id.btn_tableA)
+    @BindView(R.id.btn_tableA)
     Button btnSubmit;
 
 

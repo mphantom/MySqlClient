@@ -11,7 +11,7 @@ import com.mphantom.mysqlclient.R;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -43,7 +43,7 @@ public class ConsoleAdapter extends RecyclerView.Adapter<ConsoleAdapter.ConsoleV
     }
 
     public class ConsoleViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_messageInfo_ConsoleAdapter)
+        @BindView(R.id.tv_messageInfo_ConsoleAdapter)
         TextView textView;
 
         public ConsoleViewHolder(View itemView) {

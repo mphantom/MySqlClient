@@ -16,15 +16,15 @@ import com.mphantom.mysqlclient.widget.fragment.SshFragment;
 import com.mphantom.mysqlclient.widget.fragment.TableFragment;
 import com.mphantom.mysqlclient.widget.fragment.ViewFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
-    @Bind(R.id.navigation_mainA)
+    @BindView(R.id.navigation_mainA)
     NavigationView navigationView;
-    @Bind(R.id.layout_drawer_mainA)
+    @BindView(R.id.layout_drawer_mainA)
     DrawerLayout drawerLayout;
-    @Bind(R.id.toolbar_mainA)
+    @BindView(R.id.toolbar_mainA)
     Toolbar toolbar;
     View headView;
     TextView tv_hostInfo;

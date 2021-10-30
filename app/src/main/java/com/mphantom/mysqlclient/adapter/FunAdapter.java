@@ -14,7 +14,7 @@ import com.mphantom.mysqlclient.model.Function;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -78,7 +78,7 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.FunViewHolder>
 
 
     public class FunViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_namevalue_funAdapter)
+        @BindView(R.id.tv_namevalue_funAdapter)
         TextView tvName;
 
         public FunViewHolder(View itemView) {

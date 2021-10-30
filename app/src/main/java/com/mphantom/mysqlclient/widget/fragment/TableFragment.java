@@ -21,7 +21,7 @@ import com.mphantom.mysqlclient.widget.activity.table.TablePropertyActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -30,11 +30,11 @@ import rx.schedulers.Schedulers;
  * Created by wushaorong on 16-5-4.
  */
 public class TableFragment extends BaseFragment {
-    @Bind(R.id.recycler_tableF)
+    @BindView(R.id.recycler_tableF)
     RecyclerView recyclerView;
-    @Bind(R.id.float_tableF)
+    @BindView(R.id.float_tableF)
     FloatingActionButton floatButton;
-    @Bind(R.id.tv_tableF)
+    @BindView(R.id.tv_tableF)
     TextView tvTip;
 
     private ItemTouchHelper mItemTouchHelper;

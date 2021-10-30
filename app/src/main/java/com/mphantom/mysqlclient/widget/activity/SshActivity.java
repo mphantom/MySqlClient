@@ -16,7 +16,7 @@ import com.mphantom.mysqlclient.adapter.ConsoleAdapter;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -26,11 +26,11 @@ import rx.schedulers.Schedulers;
  * Created by wushaorong on 16-5-21.
  */
 public class SshActivity extends AppCompatActivity implements View.OnClickListener {
-    @Bind(R.id.recycler_SSHA)
+    @BindView(R.id.recycler_SSHA)
     RecyclerView recyclerview;
-    @Bind(R.id.edit_SSHA_input)
+    @BindView(R.id.edit_SSHA_input)
     EditText edit_input;
-    @Bind(R.id.btn_SSHA_submit)
+    @BindView(R.id.btn_SSHA_submit)
     Button btn_submit;
     private ConsoleAdapter adapter;
     private List<String> lists;

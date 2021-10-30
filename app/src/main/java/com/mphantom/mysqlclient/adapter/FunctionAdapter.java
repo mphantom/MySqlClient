@@ -14,7 +14,7 @@ import com.mphantom.mysqlclient.model.Trigger;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -81,13 +81,13 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.Functi
 
 
     public class FunctionViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_namevalue_functionAdapter)
+        @BindView(R.id.tv_namevalue_functionAdapter)
         TextView tvName;
-        @Bind(R.id.tv_eventvalue_functionAdapter)
+        @BindView(R.id.tv_eventvalue_functionAdapter)
         TextView tvEvent;
-        @Bind(R.id.tv_tablevalue_functionAdapter)
+        @BindView(R.id.tv_tablevalue_functionAdapter)
         TextView tvTable;
-        @Bind(R.id.tv_timevalue_functionAdapter)
+        @BindView(R.id.tv_timevalue_functionAdapter)
         TextView tvTime;
 
         public FunctionViewHolder(View itemView) {

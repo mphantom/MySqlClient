@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MySqlClient.iml" filepath="$PROJECT_DIR$/MySqlClient.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mysqlpacket/mysqlpacket.iml" filepath="$PROJECT_DIR$/mysqlpacket/mysqlpacket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sqlconnection/sqlconnection.iml" filepath="$PROJECT_DIR$/sqlconnection/sqlconnection.iml" />
     </modules>
   </component>
 </project>

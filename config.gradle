@@ -1,14 +1,14 @@
 ext {
     android = [
-            compileSdkVersion: 23,
-            targetSdkVersion : 23,
+            compileSdkVersion: 26,
+            targetSdkVersion : 26,
             minSdkVersion    : 21,
-            buildToolsVersion: "23.0.2",
+            buildToolsVersion: "26.0.2",
             VERSION_NAME     : "1.0",
             VERSION_CODE     : 1
     ]
     libraryVersion = [
-            "support"           : "23.3.0",
+            "support"           : "26.1.0",
             "retrofit2"         : "2.0.1",
             "okhttp3"           : "3.2.0",
             "leakcanary-android": "1.4-beta2",

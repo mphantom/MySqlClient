@@ -12,7 +12,7 @@ import com.mphantom.mysqlclient.App;
 import com.mphantom.mysqlclient.R;
 import com.mphantom.mysqlclient.model.Function;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -22,11 +22,11 @@ import rx.schedulers.Schedulers;
  * Created by wushaorong on 16-5-12.
  */
 public class FunDialog extends Dialog implements View.OnClickListener {
-    @Bind(R.id.edit_FunDialog_function)
+    @BindView(R.id.edit_FunDialog_function)
     EditText edit_name;
-    @Bind(R.id.edit_FunDialog_functioninfo)
+    @BindView(R.id.edit_FunDialog_functioninfo)
     EditText edit_functioninfo;
-    @Bind(R.id.btn_FunDialog_confirm)
+    @BindView(R.id.btn_FunDialog_confirm)
     Button btn_confirm;
 
 
