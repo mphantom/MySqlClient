@@ -3,9 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MySqlClient.iml" filepath="$PROJECT_DIR$/MySqlClient.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mysqlpacket/mysqlpacket.iml" filepath="$PROJECT_DIR$/mysqlpacket/mysqlpacket.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sqlconnection/sqlconnection.iml" filepath="$PROJECT_DIR$/sqlconnection/sqlconnection.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MySqlClient.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MySqlClient.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MySqlClient.buildSrc.iml" filepath="$PROJECT_DIR$/.idea/modules/MySqlClient.buildSrc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mysqlpacket/MySqlClient.mysqlpacket.iml" filepath="$PROJECT_DIR$/.idea/modules/mysqlpacket/MySqlClient.mysqlpacket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sqlconnection/MySqlClient.sqlconnection.iml" filepath="$PROJECT_DIR$/.idea/modules/sqlconnection/MySqlClient.sqlconnection.iml" />
     </modules>
   </component>
 </project>
