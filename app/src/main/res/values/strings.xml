@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">RemoteDB Explorer</string>
+    <!-- [改动前] app_name 与 connection_list_title 为 RemoteDB Explorer -->
+    <!-- [改动后] 统一为 RemoteDB Client -->
+    <!-- [原因] 应用显示名与产品命名保持一致 -->
+    <string name="app_name">RemoteDB Client</string>
 
-    <!-- Connection Screen -->
-    <string name="connection_list_title">RemoteDB Explorer</string>
+    <!-- [改动前] 多数界面文案以英文字面量硬编码在 Compose 与 ViewModel 中，本文件只有少量条目被引用 -->
+    <!-- [改动后] 所有 Compose 可见文案与 ViewModel 提示统一引用本文件；动态值使用 %1$s / %1$d 占位符，数量使用 plurals -->
+    <!-- [原因] 集中管理文案、支持本地化与无障碍描述，避免同一句话在多个页面重复硬编码 -->
+    <string name="connection_list_title">RemoteDB Client</string>
     <string name="add_connection">Add Connection</string>
     <string name="edit_connection">Edit Connection</string>
     <string name="connection_name">Connection Name</string>
     <string name="database_type">Database Type</string>
+    <string name="host">Host</string>
     <string name="host_address">Host Address</string>
     <string name="port">Port</string>
     <string name="username">Username</string>
@@ -20,10 +26,21 @@
     <string name="no_connections">No saved connections.\nTap + to add one.</string>
     <string name="enter_password">Enter Password</string>
     <string name="connect">Connect</string>
+    <string name="connect_to_connection">Connect to %1$s (%2$s)</string>
+    <string name="connection_summary">%1$s · %2$s:%3$d</string>
+    <string name="password_keep_existing">Leave blank to keep existing</string>
+    <string name="back">Back</string>
     <string name="connection_test_success">Connection successful!</string>
-    <string name="connection_test_failed">Connection failed: %s</string>
+    <string name="connection_test_failed">Connection test failed: %1$s</string>
+    <string name="connection_test_failed_no_detail">Connection test failed. Check the host, port, and credentials.</string>
+    <string name="connection_failed">Connection failed: %1$s</string>
     <string name="delete_confirm_title">Delete Connection</string>
-    <string name="delete_confirm_message">Delete "%s"? This cannot be undone.</string>
+    <string name="delete_confirm_message">Delete "%1$s"? This cannot be undone.</string>
+    <string name="close_connection">Close connection</string>
+    <string name="delete_connection">Delete connection</string>
+    <string name="connection">Connection</string>
+    <string name="db_type_mysql">MySQL</string>
+    <string name="db_type_postgresql">PostgreSQL</string>
 
     <!-- Browser Screen -->
     <string name="tables">Tables</string>
@@ -37,18 +54,48 @@
     <string name="column_type">Type</string>
     <string name="primary_key">PK</string>
     <string name="nullable">Nullable</string>
+    <string name="null_short">Null</string>
     <string name="add_row_title">Add New Row</string>
     <string name="edit_cell_title">Edit Cell</string>
     <string name="delete_row_title">Delete Row</string>
     <string name="delete_row_message">Delete this row? This action cannot be undone.</string>
+    <string name="browser">Browser</string>
+    <string name="row_number">#</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="null_value">NULL</string>
+    <string name="no_columns">No columns</string>
+    <string name="no_data">No data</string>
+    <string name="select_table_hint">Select a table to view data</string>
+    <string name="new_value">New Value</string>
+    <string name="update">Update</string>
+    <string name="insert">Insert</string>
+    <string name="edit_cell_column">Column: %1$s</string>
+    <string name="add_row_field">%1$s (%2$s)</string>
+    <string name="add_row_field_pk">%1$s (%2$s) [PK]</string>
+    <string name="page_indicator">Page %1$d of %2$d (%3$d rows)</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="error_no_primary_key_edit">Cannot edit: no primary key defined</string>
+    <string name="error_no_primary_key_delete">Cannot delete: no primary key defined</string>
+    <string name="error_load_tables">Failed to load tables</string>
+    <string name="error_load_columns">Failed to load column information</string>
+    <string name="error_load_data">Failed to load data: %1$s</string>
+    <string name="error_update_cell">Failed to update cell</string>
+    <string name="error_delete_row">Failed to delete row</string>
+    <string name="error_insert_row">Failed to insert row</string>
 
     <!-- Query Screen -->
     <string name="sql_query">SQL Query</string>
     <string name="execute">Execute</string>
     <string name="query_history">History</string>
-    <string name="rows_affected">%d row(s) affected</string>
     <string name="no_results">No results</string>
     <string name="export_csv">Export CSV</string>
+    <string name="query_history_hint">History: tap a query below to reuse</string>
+    <string name="recent_queries">Recent Queries</string>
+    <string name="clear">Clear</string>
+    <string name="error_export_csv">Failed to export CSV</string>
+    <string name="error_query_empty">Please enter a SQL statement</string>
 
     <!-- Main Screen -->
     <string name="browse">Browse</string>
@@ -57,11 +104,42 @@
     <string name="no_active_connections">No active connections</string>
 
     <!-- Errors -->
-    <string name="error_connection_failed">Failed to connect: %s</string>
-    <string name="error_query_failed">Query failed: %s</string>
+    <string name="error_connection_failed">Failed to connect: %1$s</string>
+    <string name="error_query_failed">Query failed: %1$s</string>
     <string name="error_timeout">Connection timed out. Check the host and port.</string>
     <string name="error_network">Network error. Check your internet connection.</string>
-    <string name="error_generic">An unexpected error occurred: %s</string>
-    <string name="error_field_required">%s is required</string>
+    <string name="error_generic">An unexpected error occurred: %1$s</string>
+    <string name="error_unexpected">An unexpected error occurred.</string>
+    <string name="error_field_required">%1$s is required</string>
     <string name="error_invalid_port">Invalid port number</string>
+    <string name="session_not_found">Session not found. Please reconnect.</string>
+    <string name="error_name_required">Connection name is required</string>
+    <string name="error_host_required">Host address is required</string>
+    <string name="error_port_invalid">Valid port (1-65535) is required</string>
+    <string name="error_username_required">Username is required</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_save_failed">Failed to save: %1$s</string>
+    <string name="error_save_failed_no_detail">Failed to save. Check the connection settings and try again.</string>
+
+    <!-- 数量文案 -->
+    <plurals name="rows_affected">
+        <item quantity="one">%d row affected</item>
+        <item quantity="other">%d rows affected</item>
+    </plurals>
+    <plurals name="rows_returned">
+        <item quantity="one">%d row returned</item>
+        <item quantity="other">%d rows returned</item>
+    </plurals>
+    <plurals name="cell_updated">
+        <item quantity="one">Cell updated (%d row)</item>
+        <item quantity="other">Cell updated (%d rows)</item>
+    </plurals>
+    <plurals name="row_deleted">
+        <item quantity="one">Row deleted (%d row)</item>
+        <item quantity="other">Row deleted (%d rows)</item>
+    </plurals>
+    <plurals name="row_inserted">
+        <item quantity="one">Row inserted (%d row)</item>
+        <item quantity="other">Row inserted (%d rows)</item>
+    </plurals>
 </resources>

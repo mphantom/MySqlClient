@@ -6,11 +6,14 @@ plugins {
 }
 
 android {
-    namespace = "com.example.remotedbexplorer"
+    // [改动前] namespace / applicationId 为 com.example.remotedbexplorer，源码包目录也是 com/example/remotedbexplorer
+    // [改动后] 统一为 com.phoenix.remotedbclient，源码目录同步迁移到 app/src/main/java/com/phoenix/remotedbclient
+    // [原因] 去掉示例包名 com.example 并统一产品命名；applicationId 变更后属于新应用，不承诺迁移旧版本数据
+    namespace = "com.phoenix.remotedbclient"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.remotedbexplorer"
+        applicationId = "com.phoenix.remotedbclient"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -113,8 +116,14 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // Testing
+    // [改动前] 测试依赖只有 JUnit 4 与 Espresso，缺少协程测试工具和 ApplicationProvider
+    // [改动后] 增加 kotlinx-coroutines-test 与 androidx.test core/runner
+    // [原因] 支撑新增的 ViewModel JVM 测试与 Room DAO instrumented 测试
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test:core-ktx:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.01.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")

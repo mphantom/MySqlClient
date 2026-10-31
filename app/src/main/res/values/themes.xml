@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.RemoteDBExplorer" parent="android:Theme.Material.Light.NoActionBar">
+    <!-- [改动前] 样式名为 Theme.RemoteDBExplorer -->
+    <!-- [改动后] 改为 Theme.RemoteDBClient，parent 与内部配置不变 -->
+    <!-- [原因] 统一产品命名；Manifest 已同步引用该样式 -->
+    <style name="Theme.RemoteDBClient" parent="android:Theme.Material.Light.NoActionBar">
         <!-- The Compose theme handles all styling -->
     </style>
 </resources>
