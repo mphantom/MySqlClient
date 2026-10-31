@@ -39,8 +39,6 @@
     <string name="close_connection">Close connection</string>
     <string name="delete_connection">Delete connection</string>
     <string name="connection">Connection</string>
-    <string name="db_type_mysql">MySQL</string>
-    <string name="db_type_postgresql">PostgreSQL</string>
 
     <!-- Browser Screen -->
     <string name="tables">Tables</string>

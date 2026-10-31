@@ -16,7 +16,7 @@ import javax.inject.Singleton
  * using the Android Keystore-backed [MasterKey].
  */
 @Singleton
-class SecurePreferences @Inject constructor(@ApplicationContext context: Context) {
+class SecurePreferences @Inject constructor(@ApplicationContext context: Context) : PasswordStore {
 
     private val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -33,7 +33,7 @@ class SecurePreferences @Inject constructor(@ApplicationContext context: Context
     /**
      * Stores an encrypted password for the given connection config ID.
      */
-    fun savePassword(configId: Long, password: String) {
+    override fun savePassword(configId: Long, password: String) {
         prefs.edit().putString(keyFor(configId), password).apply()
     }
 
@@ -42,19 +42,19 @@ class SecurePreferences @Inject constructor(@ApplicationContext context: Context
      *
      * @return The plaintext password, or null if not stored.
      */
-    fun getPassword(configId: Long): String? {
+    override fun getPassword(configId: Long): String? {
         return prefs.getString(keyFor(configId), null)
     }
 
     /**
      * Deletes the stored password for the given connection config ID.
      */
-    fun deletePassword(configId: Long) {
+    override fun deletePassword(configId: Long) {
         prefs.edit().remove(keyFor(configId)).apply()
     }
 
     /** Whether a password is stored for this config ID. */
-    fun hasPassword(configId: Long): Boolean {
+    override fun hasPassword(configId: Long): Boolean {
         return prefs.contains(keyFor(configId))
     }
 

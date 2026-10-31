@@ -1,26 +1,31 @@
 package com.phoenix.remotedbclient.data.remote
 
 import com.phoenix.remotedbclient.data.db.ConnectionConfigEntity
+import com.phoenix.remotedbclient.driver.ColumnInfo
+import com.phoenix.remotedbclient.driver.DriverRegistry
+import com.phoenix.remotedbclient.driver.QueryResult
+import com.phoenix.remotedbclient.driver.TableInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.ResultSet
 import java.sql.SQLException
-import java.sql.Statement
 import java.util.Properties
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
- * Manages JDBC connections to remote MySQL and PostgreSQL databases.
+ * Manages JDBC connections to remote databases.
  *
  * Each [RemoteDatabaseManager] instance wraps a single [Connection].
  * All JDBC operations run on [Dispatchers.IO] to avoid blocking the main thread.
  * Call [close] when done to release the underlying connection.
+ *
+ * [改动前] 通过 when (dbType) 硬编码 MySQL/PostgreSQL 的 URL、驱动类、元数据 SQL、
+ *          标识符引号与分页语法，新增数据库必须改这个类
+ * [改动后] 从 [DriverRegistry] 取出 [com.phoenix.remotedbclient.driver.DatabaseDialect]，
+ *          所有数据库差异委托给方言实现；本类只负责连接生命周期与异常映射
+ * [原因] 让新增数据库只需新增驱动模块，不再修改核心连接与查询代码
  */
-@Singleton
-class RemoteDatabaseManager @Inject constructor() {
+class RemoteDatabaseManager(private val driverRegistry: DriverRegistry) : DatabaseConnector {
 
     /** The active JDBC connection, null if not connected. */
     @Volatile
@@ -32,7 +37,7 @@ class RemoteDatabaseManager @Inject constructor() {
         private set
 
     /** Whether this manager currently holds an open connection. */
-    val isConnected: Boolean
+    override val isConnected: Boolean
         get() = connection != null && !connection!!.isClosed
 
     /**
@@ -40,10 +45,10 @@ class RemoteDatabaseManager @Inject constructor() {
      *
      * @throws SQLException if the connection cannot be established.
      */
-    suspend fun connect(config: ConnectionConfigEntity, password: String) = withContext(Dispatchers.IO) {
+    override suspend fun connect(config: ConnectionConfigEntity, password: String) = withContext(Dispatchers.IO) {
         close() // ensure any prior connection is released
 
-        val url = buildJdbcUrl(config)
+        val dialect = driverRegistry.get(config.dbType)
         val props = Properties().apply {
             setProperty("user", config.username)
             setProperty("password", password)
@@ -52,10 +57,13 @@ class RemoteDatabaseManager @Inject constructor() {
             setProperty("socketTimeout", "30000")
         }
 
-        // Load the appropriate JDBC driver class
-        loadDriver(config.dbType)
+        // Load the driver declared by the dialect
+        Class.forName(dialect.driverClassName)
 
-        connection = DriverManager.getConnection(url, props)
+        connection = DriverManager.getConnection(
+            dialect.buildJdbcUrl(config.host, config.port, config.defaultDatabase),
+            props
+        )
         connectedConfig = config
     }
 
@@ -68,20 +76,22 @@ class RemoteDatabaseManager @Inject constructor() {
     suspend fun testConnection(config: ConnectionConfigEntity, password: String): String? =
         withContext(Dispatchers.IO) {
             try {
-                val url = buildJdbcUrl(config)
+                val dialect = driverRegistry.get(config.dbType)
                 val props = Properties().apply {
                     setProperty("user", config.username)
                     setProperty("password", password)
                     setProperty("connectTimeout", "10000")
                 }
-                loadDriver(config.dbType)
-                val testConn = DriverManager.getConnection(url, props)
-                if (testConn.isValid(5)) {
-                    testConn.close()
-                    null // success
-                } else {
-                    testConn.close()
-                    "Connection validation failed"
+                Class.forName(dialect.driverClassName)
+                DriverManager.getConnection(
+                    dialect.buildJdbcUrl(config.host, config.port, config.defaultDatabase),
+                    props
+                ).use { testConnection ->
+                    if (testConnection.isValid(5)) {
+                        null // success
+                    } else {
+                        "Connection validation failed"
+                    }
                 }
             } catch (e: SQLException) {
                 e.message ?: "Unknown database error"
@@ -97,51 +107,10 @@ class RemoteDatabaseManager @Inject constructor() {
      */
     suspend fun getTables(): List<TableInfo>? = withContext(Dispatchers.IO) {
         try {
-            val conn = connection ?: return@withContext null
+            val activeConnection = connection ?: return@withContext null
             val config = connectedConfig ?: return@withContext null
-            val tables = mutableListOf<TableInfo>()
-
-            when (config.dbType) {
-                "MySQL" -> {
-                    // MySQL: use SHOW TABLES or information_schema
-                    val stmt = conn.createStatement()
-                    val rs = stmt.executeQuery(
-                        "SELECT TABLE_NAME, TABLE_TYPE FROM information_schema.TABLES " +
-                            "WHERE TABLE_SCHEMA = '${escapeSql(config.defaultDatabase)}' " +
-                            "ORDER BY TABLE_NAME"
-                    )
-                    while (rs.next()) {
-                        tables.add(
-                            TableInfo(
-                                name = rs.getString("TABLE_NAME"),
-                                type = rs.getString("TABLE_TYPE") // BASE TABLE or VIEW
-                            )
-                        )
-                    }
-                    rs.close()
-                    stmt.close()
-                }
-                "PostgreSQL" -> {
-                    val stmt = conn.createStatement()
-                    val rs = stmt.executeQuery(
-                        "SELECT table_name, table_type FROM information_schema.tables " +
-                            "WHERE table_schema NOT IN ('pg_catalog', 'information_schema') " +
-                            "ORDER BY table_name"
-                    )
-                    while (rs.next()) {
-                        val tableType = rs.getString("table_type")
-                        tables.add(
-                            TableInfo(
-                                name = rs.getString("table_name"),
-                                type = if (tableType == "VIEW") "VIEW" else "BASE TABLE"
-                            )
-                        )
-                    }
-                    rs.close()
-                    stmt.close()
-                }
-            }
-            tables
+            driverRegistry.get(config.dbType)
+                .listTables(activeConnection, config.defaultDatabase)
         } catch (e: SQLException) {
             null
         }
@@ -154,69 +123,10 @@ class RemoteDatabaseManager @Inject constructor() {
      */
     suspend fun getColumns(tableName: String): List<ColumnInfo>? = withContext(Dispatchers.IO) {
         try {
-            val conn = connection ?: return@withContext null
+            val activeConnection = connection ?: return@withContext null
             val config = connectedConfig ?: return@withContext null
-            val columns = mutableListOf<ColumnInfo>()
-
-            when (config.dbType) {
-                "MySQL" -> {
-                    val stmt = conn.createStatement()
-                    val rs = stmt.executeQuery(
-                        "SELECT COLUMN_NAME, DATA_TYPE, COLUMN_KEY, IS_NULLABLE, ORDINAL_POSITION " +
-                            "FROM information_schema.COLUMNS " +
-                            "WHERE TABLE_SCHEMA = '${escapeSql(config.defaultDatabase)}' " +
-                            "AND TABLE_NAME = '${escapeSql(tableName)}' " +
-                            "ORDER BY ORDINAL_POSITION"
-                    )
-                    while (rs.next()) {
-                        columns.add(
-                            ColumnInfo(
-                                name = rs.getString("COLUMN_NAME"),
-                                dataType = rs.getString("DATA_TYPE"),
-                                isPrimaryKey = "PRI" == rs.getString("COLUMN_KEY"),
-                                isNullable = "YES" == rs.getString("IS_NULLABLE"),
-                                ordinalPosition = rs.getInt("ORDINAL_POSITION")
-                            )
-                        )
-                    }
-                    rs.close()
-                    stmt.close()
-                }
-                "PostgreSQL" -> {
-                    val stmt = conn.createStatement()
-                    val rs = stmt.executeQuery(
-                        "SELECT c.column_name, c.data_type, " +
-                            "CASE WHEN pk.column_name IS NOT NULL THEN true ELSE false END AS is_pk, " +
-                            "c.is_nullable, c.ordinal_position " +
-                            "FROM information_schema.columns c " +
-                            "LEFT JOIN (SELECT ku.table_schema, ku.table_name, ku.column_name " +
-                            "  FROM information_schema.table_constraints tc " +
-                            "  JOIN information_schema.key_column_usage ku " +
-                            "    ON tc.constraint_name = ku.constraint_name " +
-                            "  WHERE tc.constraint_type = 'PRIMARY KEY') pk " +
-                            "  ON c.table_schema = pk.table_schema " +
-                            "  AND c.table_name = pk.table_name " +
-                            "  AND c.column_name = pk.column_name " +
-                            "WHERE c.table_schema NOT IN ('pg_catalog', 'information_schema') " +
-                            "AND c.table_name = '${escapeSql(tableName)}' " +
-                            "ORDER BY c.ordinal_position"
-                    )
-                    while (rs.next()) {
-                        columns.add(
-                            ColumnInfo(
-                                name = rs.getString("column_name"),
-                                dataType = rs.getString("data_type"),
-                                isPrimaryKey = rs.getBoolean("is_pk"),
-                                isNullable = "YES" == rs.getString("is_nullable"),
-                                ordinalPosition = rs.getInt("ordinal_position")
-                            )
-                        )
-                    }
-                    rs.close()
-                    stmt.close()
-                }
-            }
-            columns
+            driverRegistry.get(config.dbType)
+                .listColumns(activeConnection, config.defaultDatabase, tableName)
         } catch (e: SQLException) {
             null
         }
@@ -235,28 +145,15 @@ class RemoteDatabaseManager @Inject constructor() {
         tableName: String,
         columns: List<String>,
         offset: Int = 0,
-        limit: Int = 50
+        limit: Int = 50,
+        orderBy: String? = null,
+        ascending: Boolean = true
     ): QueryResult = withContext(Dispatchers.IO) {
         try {
-            val conn = connection ?: return@withContext QueryResult.error("Not connected")
+            val activeConnection = connection ?: return@withContext QueryResult.error("Not connected")
             val config = connectedConfig ?: return@withContext QueryResult.error("No config")
-            val colList = if (columns.isEmpty()) "*" else columns.joinToString(", ") {
-                "`$it`".takeIf { config.dbType == "MySQL" } ?: "\"$it\"".takeIf { config.dbType == "PostgreSQL" } ?: it
-            }
-
-            val tableRef = when (config.dbType) {
-                "MySQL" -> "`${escapeSql(tableName)}`"
-                "PostgreSQL" -> "\"${escapeSql(tableName)}\""
-                else -> escapeSql(tableName)
-            }
-
-            val sql: String
-            when (config.dbType) {
-                "PostgreSQL" -> sql = "SELECT $colList FROM $tableRef LIMIT $limit OFFSET $offset"
-                else -> sql = "SELECT $colList FROM $tableRef LIMIT $offset, $limit"
-            }
-
-            executeSelectInternal(conn, sql)
+            driverRegistry.get(config.dbType)
+                .selectRows(activeConnection, tableName, columns, offset, limit, orderBy, ascending)
         } catch (e: SQLException) {
             QueryResult.error(e.message ?: "Query failed")
         }
@@ -270,7 +167,7 @@ class RemoteDatabaseManager @Inject constructor() {
      */
     suspend fun executeRawQuery(sql: String): QueryResult = withContext(Dispatchers.IO) {
         try {
-            val conn = connection ?: return@withContext QueryResult.error("Not connected")
+            val activeConnection = connection ?: return@withContext QueryResult.error("Not connected")
             val trimmed = sql.trim()
 
             // Determine if it's a query (SELECT / WITH / SHOW / DESCRIBE / EXPLAIN) or a mutation
@@ -284,12 +181,11 @@ class RemoteDatabaseManager @Inject constructor() {
             }
 
             if (isQuery) {
-                executeSelectInternal(conn, trimmed)
+                executeSelectInternal(activeConnection, trimmed)
             } else {
-                val stmt = conn.createStatement()
-                val affected = stmt.executeUpdate(trimmed)
-                stmt.close()
-                QueryResult.updateResult(affected)
+                activeConnection.createStatement().use { statement ->
+                    QueryResult.updateResult(statement.executeUpdate(trimmed))
+                }
             }
         } catch (e: SQLException) {
             QueryResult.error(e.message ?: "Query failed")
@@ -301,20 +197,9 @@ class RemoteDatabaseManager @Inject constructor() {
      */
     suspend fun countRows(tableName: String): Int = withContext(Dispatchers.IO) {
         try {
-            val conn = connection ?: return@withContext 0
+            val activeConnection = connection ?: return@withContext 0
             val config = connectedConfig ?: return@withContext 0
-            val tableRef = when (config.dbType) {
-                "MySQL" -> "`${escapeSql(tableName)}`"
-                "PostgreSQL" -> "\"${escapeSql(tableName)}\""
-                else -> escapeSql(tableName)
-            }
-            val stmt = conn.createStatement()
-            val rs = stmt.executeQuery("SELECT COUNT(*) FROM $tableRef")
-            rs.next()
-            val count = rs.getInt(1)
-            rs.close()
-            stmt.close()
-            count
+            driverRegistry.get(config.dbType).countRows(activeConnection, tableName)
         } catch (e: SQLException) {
             0
         }
@@ -338,30 +223,16 @@ class RemoteDatabaseManager @Inject constructor() {
         primaryKeyVals: List<String?>
     ): Int = withContext(Dispatchers.IO) {
         try {
-            val conn = connection ?: return@withContext -1
+            val activeConnection = connection ?: return@withContext -1
             val config = connectedConfig ?: return@withContext -1
-
-            val colQuote = when (config.dbType) {
-                "MySQL" -> "`"
-                "PostgreSQL" -> "\""
-                else -> ""
-            }
-            val tableRef = "$colQuote${escapeSql(tableName)}$colQuote"
-            val colRef = "$colQuote${escapeSql(columnName)}$colQuote"
-
-            val whereClause = primaryKeyCols.joinToString(" AND ") {
-                "$colQuote${escapeSql(it)}$colQuote = ?"
-            }
-
-            val sql = "UPDATE $tableRef SET $colRef = ? WHERE $whereClause"
-            val pstmt = conn.prepareStatement(sql)
-            pstmt.setString(1, newValue)
-            primaryKeyVals.forEachIndexed { idx, value ->
-                pstmt.setString(idx + 2, value)
-            }
-            val affected = pstmt.executeUpdate()
-            pstmt.close()
-            affected
+            driverRegistry.get(config.dbType).updateCell(
+                activeConnection,
+                tableName,
+                columnName,
+                newValue,
+                primaryKeyCols,
+                primaryKeyVals
+            )
         } catch (e: SQLException) {
             -1
         }
@@ -378,28 +249,10 @@ class RemoteDatabaseManager @Inject constructor() {
         primaryKeyVals: List<String?>
     ): Int = withContext(Dispatchers.IO) {
         try {
-            val conn = connection ?: return@withContext -1
+            val activeConnection = connection ?: return@withContext -1
             val config = connectedConfig ?: return@withContext -1
-
-            val colQuote = when (config.dbType) {
-                "MySQL" -> "`"
-                "PostgreSQL" -> "\""
-                else -> ""
-            }
-            val tableRef = "$colQuote${escapeSql(tableName)}$colQuote"
-
-            val whereClause = primaryKeyCols.joinToString(" AND ") {
-                "$colQuote${escapeSql(it)}$colQuote = ?"
-            }
-
-            val sql = "DELETE FROM $tableRef WHERE $whereClause"
-            val pstmt = conn.prepareStatement(sql)
-            primaryKeyVals.forEachIndexed { idx, value ->
-                pstmt.setString(idx + 1, value)
-            }
-            val affected = pstmt.executeUpdate()
-            pstmt.close()
-            affected
+            driverRegistry.get(config.dbType)
+                .deleteRow(activeConnection, tableName, primaryKeyCols, primaryKeyVals)
         } catch (e: SQLException) {
             -1
         }
@@ -415,27 +268,10 @@ class RemoteDatabaseManager @Inject constructor() {
         columnValues: Map<String, String?>
     ): Int = withContext(Dispatchers.IO) {
         try {
-            val conn = connection ?: return@withContext -1
+            val activeConnection = connection ?: return@withContext -1
             val config = connectedConfig ?: return@withContext -1
-
-            val colQuote = when (config.dbType) {
-                "MySQL" -> "`"
-                "PostgreSQL" -> "\""
-                else -> ""
-            }
-            val tableRef = "$colQuote${escapeSql(tableName)}$colQuote"
-
-            val columns = columnValues.keys.joinToString(", ") { "$colQuote${escapeSql(it)}$colQuote" }
-            val placeholders = columnValues.keys.joinToString(", ") { "?" }
-            val sql = "INSERT INTO $tableRef ($columns) VALUES ($placeholders)"
-
-            val pstmt = conn.prepareStatement(sql)
-            columnValues.values.forEachIndexed { idx, value ->
-                pstmt.setString(idx + 1, value)
-            }
-            val affected = pstmt.executeUpdate()
-            pstmt.close()
-            affected
+            driverRegistry.get(config.dbType)
+                .insertRow(activeConnection, tableName, columnValues)
         } catch (e: SQLException) {
             -1
         }
@@ -460,54 +296,20 @@ class RemoteDatabaseManager @Inject constructor() {
 
     /** Internal helper to execute a SELECT and map rows. */
     private fun executeSelectInternal(conn: Connection, sql: String): QueryResult {
-        val stmt = conn.createStatement()
-        stmt.queryTimeout = 30
-        val rs = stmt.executeQuery(sql)
-        val meta = rs.metaData
-        val columnCount = meta.columnCount
-        val columns = (1..columnCount).map { meta.getColumnName(it) }
-        val rows = mutableListOf<List<String?>>()
+        conn.createStatement().use { statement ->
+            statement.queryTimeout = 30
+            statement.executeQuery(sql).use { resultSet ->
+                val metaData = resultSet.metaData
+                val columnCount = metaData.columnCount
+                val columns = (1..columnCount).map { metaData.getColumnName(it) }
+                val rows = mutableListOf<List<String?>>()
 
-        while (rs.next()) {
-            val row = (1..columnCount).map { idx ->
-                rs.getString(idx)
+                while (resultSet.next()) {
+                    rows.add((1..columnCount).map { resultSet.getString(it) })
+                }
+
+                return QueryResult.selectResult(columns, rows)
             }
-            rows.add(row)
         }
-
-        rs.close()
-        stmt.close()
-        return QueryResult.selectResult(columns, rows)
-    }
-
-    /** Builds the JDBC connection URL for the given config. */
-    private fun buildJdbcUrl(config: ConnectionConfigEntity): String {
-        val dbName = config.defaultDatabase.ifEmpty { "" }
-        return when (config.dbType) {
-            "MySQL" -> {
-                val params = "?useSSL=false&allowPublicKeyRetrieval=true&connectTimeout=10000&socketTimeout=30000"
-                "jdbc:mysql://${config.host}:${config.port}/${dbName}$params"
-            }
-            "PostgreSQL" -> {
-                "jdbc:postgresql://${config.host}:${config.port}/${dbName}?connectTimeout=10&socketTimeout=30"
-            }
-            else -> throw IllegalArgumentException("Unsupported database type: ${config.dbType}")
-        }
-    }
-
-    /** Ensures the JDBC driver class is loaded. */
-    private fun loadDriver(dbType: String) {
-        when (dbType) {
-            "MySQL" -> Class.forName("com.mysql.cj.jdbc.Driver")
-            "PostgreSQL" -> Class.forName("org.postgresql.Driver")
-        }
-    }
-
-    /** Basic SQL identifier escaping to prevent injection in metadata queries. */
-    private fun escapeSql(input: String): String {
-        return input.replace("\\", "\\\\")
-            .replace("'", "\\'")
-            .replace("\"", "\\\"")
-            .replace("`", "\\`")
     }
 }

@@ -22,5 +22,8 @@ dependencyResolutionManagement {
 // [改动前] rootProject.name = "RemoteDBExplorer"
 // [改动后] rootProject.name = "RemoteDBClient"，模块结构不变（仍只有 :app）
 // [原因] 根项目名与新的应用名保持一致，避免 IDE 与构建产物使用旧名字
+// [改动前] 只有 :app 模块
+// [改动后] 增加 driver-api、driver-mysql、driver-postgresql
+// [原因] 把数据库方言与 JDBC 驱动从 app 核心中解耦，新增数据库以新增驱动模块为主
 rootProject.name = "RemoteDBClient"
-include(":app")
+include(":app", ":driver-api", ":driver-mysql", ":driver-postgresql")

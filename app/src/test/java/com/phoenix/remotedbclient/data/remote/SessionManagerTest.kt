@@ -1,5 +1,6 @@
 package com.phoenix.remotedbclient.data.remote
 
+import com.phoenix.remotedbclient.testutil.testDriverRegistry
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -17,7 +18,7 @@ class SessionManagerTest {
 
     @Test
     fun `getOrCreate reuses the same manager`() {
-        val sessionManager = SessionManager()
+        val sessionManager = SessionManager(testDriverRegistry())
 
         val first = sessionManager.getOrCreate(1L)
         val second = sessionManager.getOrCreate(1L)
@@ -28,12 +29,12 @@ class SessionManagerTest {
 
     @Test
     fun `get returns null for unknown session`() {
-        assertNull(SessionManager().get(99L))
+        assertNull(SessionManager(testDriverRegistry()).get(99L))
     }
 
     @Test
     fun `passwords are kept per config`() {
-        val sessionManager = SessionManager()
+        val sessionManager = SessionManager(testDriverRegistry())
 
         sessionManager.storePassword(1L, "secret-a")
         sessionManager.storePassword(2L, "secret-b")
@@ -45,7 +46,7 @@ class SessionManagerTest {
 
     @Test
     fun `remove closes and forgets session`() {
-        val sessionManager = SessionManager()
+        val sessionManager = SessionManager(testDriverRegistry())
         val manager = sessionManager.getOrCreate(1L)
 
         sessionManager.remove(1L)
@@ -56,7 +57,7 @@ class SessionManagerTest {
 
     @Test
     fun `activeConfigIds tracks sessions`() {
-        val sessionManager = SessionManager()
+        val sessionManager = SessionManager(testDriverRegistry())
         sessionManager.getOrCreate(1L)
         sessionManager.getOrCreate(2L)
 
@@ -65,7 +66,7 @@ class SessionManagerTest {
 
     @Test
     fun `clearAll removes sessions and passwords`() {
-        val sessionManager = SessionManager()
+        val sessionManager = SessionManager(testDriverRegistry())
         val manager = sessionManager.getOrCreate(1L)
         sessionManager.storePassword(1L, "secret")
 
@@ -79,7 +80,7 @@ class SessionManagerTest {
 
     @Test
     fun `manager is not connected before connect is called`() {
-        val manager = SessionManager().getOrCreate(1L)
+        val manager = SessionManager(testDriverRegistry()).getOrCreate(1L)
 
         assertNotNull(manager)
         assertFalse(manager.isConnected)

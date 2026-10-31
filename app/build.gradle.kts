@@ -108,9 +108,13 @@ dependencies {
     // Security - Encrypted SharedPreferences
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
-    // JDBC Drivers
-    implementation("mysql:mysql-connector-java:8.0.33")
-    implementation("org.postgresql:postgresql:42.6.0")
+    // Database drivers
+    // [改动前] JDBC 驱动直接依赖在 app 模块，新增数据库必须改 app 的构建脚本
+    // [改动后] app 只依赖 driver-api 与所需驱动模块，JDBC 依赖封装在各驱动模块中
+    // [原因] 新增数据库只需新增驱动模块，不再在 app 中逐个添加 JDBC jar
+    implementation(project(":driver-api"))
+    implementation(project(":driver-mysql"))
+    implementation(project(":driver-postgresql"))
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")

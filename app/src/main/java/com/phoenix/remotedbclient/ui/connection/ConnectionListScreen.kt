@@ -258,10 +258,10 @@ private fun ConnectionCard(
                 imageVector = if (hasSavedPassword) Icons.Filled.Storage else Icons.Outlined.Storage,
                 contentDescription = config.dbType,
                 modifier = Modifier.size(40.dp),
-                tint = if (config.dbType == "MySQL")
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.tertiary
+                // [改动前] 通过 config.dbType == "MySQL" 决定图标颜色，新增数据库要改 UI
+                // [改动后] 使用统一的主题色
+                // [原因] 列表页不应再知道具体数据库类型；颜色差异不是核心信息
+                tint = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {

@@ -1,4 +1,13 @@
-package com.phoenix.remotedbclient.data.remote
+package com.phoenix.remotedbclient.driver
+
+/**
+ * 职责：数据库方言层使用的通用模型（表、列、查询结果）。
+ * 位置：driver-api 模块，app 与各驱动模块共享。
+ *
+ * [改动前] 这些模型位于 app 的 data/remote/Models.kt，驱动模块无法引用 app 内部类型
+ * [改动后] 迁移到 driver-api，包名改为 com.phoenix.remotedbclient.driver
+ * [原因] 让方言实现可以返回统一模型，同时避免驱动反向依赖 app
+ */
 
 /**
  * Information about a database table or view.

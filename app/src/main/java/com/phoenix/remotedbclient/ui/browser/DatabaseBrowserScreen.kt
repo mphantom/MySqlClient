@@ -72,8 +72,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.phoenix.remotedbclient.R
-import com.phoenix.remotedbclient.data.remote.ColumnInfo
-import com.phoenix.remotedbclient.data.remote.TableInfo
+import com.phoenix.remotedbclient.driver.ColumnInfo
+import com.phoenix.remotedbclient.driver.TableInfo
 import kotlinx.coroutines.launch
 
 /**
@@ -245,6 +245,9 @@ fun DatabaseBrowserScreen(
                             totalPages = uiState.totalPages,
                             totalRows = uiState.totalRows,
                             isLoading = uiState.isLoadingData,
+                            sortColumn = uiState.sortColumn,
+                            sortAscending = uiState.sortAscending,
+                            onSort = viewModel::sortBy,
                             onPreviousPage = viewModel::previousPage,
                             onNextPage = viewModel::nextPage,
                             onCellClick = { row, colName, value ->
@@ -429,6 +432,9 @@ private fun DataTab(
     totalPages: Int,
     totalRows: Int,
     isLoading: Boolean,
+    sortColumn: String?,
+    sortAscending: Boolean,
+    onSort: (String) -> Unit,
     onPreviousPage: () -> Unit,
     onNextPage: () -> Unit,
     onCellClick: (List<String?>, String, String?) -> Unit,
@@ -493,13 +499,20 @@ private fun DataTab(
                         textAlign = TextAlign.Center
                     )
                     columns.forEach { col ->
+                        val isSorted = col == sortColumn
+                        val headerText = if (isSorted) {
+                            "$col ${if (sortAscending) "▲" else "▼"}"
+                        } else {
+                            col
+                        }
                         Text(
-                            col,
+                            headerText,
                             modifier = Modifier
                                 .widthIn(min = columnWidth)
                                 .width(columnWidth)
                                 .padding(horizontal = 4.dp, vertical = 4.dp)
-                                .border(0.5.dp, MaterialTheme.colorScheme.outline),
+                                .border(0.5.dp, MaterialTheme.colorScheme.outline)
+                                .clickable { onSort(col) },
                             fontWeight = FontWeight.Bold,
                             fontSize = 11.sp,
                             fontFamily = FontFamily.Monospace,

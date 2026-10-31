@@ -8,9 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.phoenix.remotedbclient.R
 import com.phoenix.remotedbclient.data.db.ConnectionConfigEntity
 import com.phoenix.remotedbclient.data.remote.RemoteDatabaseManager
+import com.phoenix.remotedbclient.data.remote.SessionConnector
 import com.phoenix.remotedbclient.data.repository.ConnectionRepository
 import com.phoenix.remotedbclient.ui.common.UiText
-import com.phoenix.remotedbclient.util.SecurePreferences
+import com.phoenix.remotedbclient.util.PasswordStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,8 +46,9 @@ sealed class ConnectionEvent {
 @HiltViewModel
 class ConnectionViewModel @Inject constructor(
     private val repository: ConnectionRepository,
-    private val securePreferences: SecurePreferences,
-    private val remoteDatabaseManager: RemoteDatabaseManager
+    private val securePreferences: PasswordStore,
+    private val remoteDatabaseManager: RemoteDatabaseManager,
+    private val sessionManager: SessionConnector
 ) : ViewModel() {
 
     /** Observable list of saved configs. */
@@ -68,31 +70,31 @@ class ConnectionViewModel @Inject constructor(
 
     /**
      * Attempts to connect to the database using [config] and [password].
-     * On success emits [ConnectionEvent.NavigateToConnection].
-     * On failure emits [ConnectionEvent.ShowSnackbar].
+     * On success the session manager holds an actually connected manager and
+     * [ConnectionEvent.NavigateToConnection] is emitted.
+     * On failure the session is removed and [ConnectionEvent.ShowSnackbar] is emitted.
+     *
+     * [改动前] 只调用 testConnection(临时建连后立即关闭)，会话管理器里仍是未连接实例，
+     *          进入 Browse/Query 后会报 “Session not found” 并退回列表
+     * [改动后] 直接通过 SessionManager.getOrCreate(...).connect(...) 建立并保留连接，
+     *          成功后才导航；失败时移除半初始化会话
+     * [原因] 修复主链路断点，保证工作区拿到的会话处于已连接状态
      */
     fun connectToDatabase(config: ConnectionConfigEntity, password: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isTestingConnection = true)
             try {
-                val error = remoteDatabaseManager.testConnection(config, password)
-                if (error == null) {
-                    // Save password for future use
-                    securePreferences.savePassword(config.id, password)
-                    _events.emit(ConnectionEvent.NavigateToConnection(config.id, password))
-                } else {
-                    _events.emit(
-                        ConnectionEvent.ShowSnackbar(
-                            UiText.Res(R.string.connection_failed, listOf(error))
-                        )
-                    )
-                }
+                sessionManager.getOrCreate(config.id).connect(config, password)
+                // Save password for future use
+                securePreferences.savePassword(config.id, password)
+                _events.emit(ConnectionEvent.NavigateToConnection(config.id, password))
             } catch (e: Exception) {
+                sessionManager.remove(config.id)
                 val detail = e.message
                 _events.emit(
                     ConnectionEvent.ShowSnackbar(
                         if (detail != null) {
-                            UiText.Res(R.string.error_generic, listOf(detail))
+                            UiText.Res(R.string.connection_failed, listOf(detail))
                         } else {
                             UiText.Res(R.string.error_unexpected)
                         }

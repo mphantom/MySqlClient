@@ -6,7 +6,7 @@ package com.phoenix.remotedbclient.ui.query
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phoenix.remotedbclient.R
-import com.phoenix.remotedbclient.data.remote.QueryResult
+import com.phoenix.remotedbclient.driver.QueryResult
 import com.phoenix.remotedbclient.data.remote.RemoteDatabaseManager
 import com.phoenix.remotedbclient.data.remote.SessionManager
 import com.phoenix.remotedbclient.data.repository.ConnectionRepository
@@ -100,10 +100,10 @@ class QueryViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isLoading = true)
             val result = withContext(Dispatchers.IO) { manager.executeRawQuery(sql) }
             if (result.errorMessage != null) {
-                // [改动前] 在已判定非空的分支仍写 ?: "" 兜底，编译器提示该 Elvis 永远返回左值
-                // [改动后] 直接使用智能转换为非空的 result.errorMessage
-                // [原因] 删除冗余兜底，行为不变
-                val detail = result.errorMessage
+                // [改动前] QueryResult 与 ViewModel 同模块时可直接智能转换，上一轮因此删掉了 ?: "" 兜底
+                // [改动后] 模型移到 driver-api 后，跨模块公开属性无法智能转换，用 orEmpty() 显式兜底
+                // [原因] 分支内已判定非空，orEmpty() 不改变实际文案，同时保证 List<String> 可传给 List<Any>
+                val detail = result.errorMessage.orEmpty()
                 _events.emit(
                     QueryEvent.ShowSnackbar(
                         UiText.Res(R.string.error_query_failed, listOf(detail))

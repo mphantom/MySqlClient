@@ -7,11 +7,11 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phoenix.remotedbclient.R
-import com.phoenix.remotedbclient.data.remote.ColumnInfo
 import com.phoenix.remotedbclient.data.remote.RemoteDatabaseManager
 import com.phoenix.remotedbclient.data.remote.SessionManager
-import com.phoenix.remotedbclient.data.remote.TableInfo
 import com.phoenix.remotedbclient.data.repository.ConnectionRepository
+import com.phoenix.remotedbclient.driver.ColumnInfo
+import com.phoenix.remotedbclient.driver.TableInfo
 import com.phoenix.remotedbclient.ui.common.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +32,11 @@ data class BrowserUiState(
     val dataRows: List<List<String?>> = emptyList(),
     val currentPage: Int = 0,
     val totalRows: Int = 0,
+    // [改动前] 数据表没有排序状态，翻页依赖数据库默认返回顺序
+    // [改动后] 记录当前排序列与方向，默认使用主键列
+    // [原因] 排序既是用户功能，也保证分页稳定
+    val sortColumn: String? = null,
+    val sortAscending: Boolean = true,
     val isLoadingTables: Boolean = false,
     val isLoadingColumns: Boolean = false,
     val isLoadingData: Boolean = false,
@@ -129,12 +134,17 @@ class BrowserViewModel @Inject constructor(
 
             if (cols != null) {
                 val dataCols = cols.map { it.name }
+                // 默认按主键排序；没有主键时退回第一列，尽量避免无 ORDER BY 的分页
+                val defaultSortColumn = cols.firstOrNull { it.isPrimaryKey }?.name
+                    ?: cols.firstOrNull()?.name
                 _uiState.value = _uiState.value.copy(
                     columns = cols,
                     dataColumns = dataCols,
                     isLoadingColumns = false,
                     totalRows = total,
-                    currentPage = 0
+                    currentPage = 0,
+                    sortColumn = defaultSortColumn,
+                    sortAscending = true
                 )
                 loadDataInternal(tableName, 0)
             } else {
@@ -152,18 +162,40 @@ class BrowserViewModel @Inject constructor(
         viewModelScope.launch { loadDataInternal(tableName, page) }
     }
 
+    /**
+     * 点击列头时切换排序：同一列在升/降序间切换，换列时默认升序，并回到第一页。
+     */
+    fun sortBy(column: String) {
+        val state = _uiState.value
+        val tableName = state.selectedTable ?: return
+        val ascending = if (state.sortColumn == column) !state.sortAscending else true
+        _uiState.value = state.copy(
+            sortColumn = column,
+            sortAscending = ascending,
+            currentPage = 0
+        )
+        loadData(tableName, 0)
+    }
+
     private suspend fun loadDataInternal(tableName: String, page: Int) {
         val manager = remoteDbManager ?: return
         _uiState.value = _uiState.value.copy(isLoadingData = true)
         val state = _uiState.value
         val result = withContext(Dispatchers.IO) {
-            manager.selectRows(tableName, state.dataColumns, page * state.pageSize, state.pageSize)
+            manager.selectRows(
+                tableName,
+                state.dataColumns,
+                page * state.pageSize,
+                state.pageSize,
+                state.sortColumn,
+                state.sortAscending
+            )
         }
         if (result.errorMessage != null) {
-            // [改动前] 在已判定非空的分支仍写 ?: "" 兜底，编译器提示该 Elvis 永远返回左值
-            // [改动后] 直接使用智能转换为非空的 result.errorMessage
-            // [原因] 删除冗余兜底，行为不变
-            val detail = result.errorMessage
+            // [改动前] QueryResult 与 ViewModel 同模块时可直接智能转换，上一轮因此删掉了 ?: "" 兜底
+            // [改动后] 模型移到 driver-api 后，跨模块公开属性无法智能转换，用 orEmpty() 显式兜底
+            // [原因] 分支内已判定非空，orEmpty() 不改变实际文案，同时保证 List<String> 可传给 List<Any>
+            val detail = result.errorMessage.orEmpty()
             _events.emit(
                 BrowserEvent.ShowSnackbar(
                     UiText.Res(R.string.error_load_data, listOf(detail))

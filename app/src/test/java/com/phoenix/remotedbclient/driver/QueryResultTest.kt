@@ -1,4 +1,4 @@
-package com.phoenix.remotedbclient.data.remote
+package com.phoenix.remotedbclient.driver
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -9,7 +9,11 @@ import org.junit.Test
 /**
  * 职责：验证 QueryResult 的 SELECT / DML / 错误三种工厂与默认值，
  * 确保查询结果建模不会在重构中悄悄改变。
- * 位置：data/remote 的 JVM 单元测试。
+ * 位置：driver 包的 JVM 单元测试。
+ *
+ * [改动前] 位于 data/remote，测试 app 内部的 QueryResult
+ * [改动后] 随 QueryResult 迁移到 driver-api，测试 driver 包
+ * [原因] 模型已移到驱动 API，测试随之迁移
  */
 class QueryResultTest {
 

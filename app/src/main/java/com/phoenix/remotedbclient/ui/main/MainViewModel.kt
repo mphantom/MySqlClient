@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.phoenix.remotedbclient.data.db.ConnectionConfigEntity
 import com.phoenix.remotedbclient.data.remote.SessionManager
 import com.phoenix.remotedbclient.data.repository.ConnectionRepository
-import com.phoenix.remotedbclient.util.SecurePreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,8 +34,7 @@ data class MainUiState(
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val sessionManager: SessionManager,
-    private val repository: ConnectionRepository,
-    private val securePreferences: SecurePreferences
+    private val repository: ConnectionRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())

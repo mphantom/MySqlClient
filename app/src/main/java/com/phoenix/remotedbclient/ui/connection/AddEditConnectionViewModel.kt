@@ -11,8 +11,10 @@ import com.phoenix.remotedbclient.R
 import com.phoenix.remotedbclient.data.db.ConnectionConfigEntity
 import com.phoenix.remotedbclient.data.remote.RemoteDatabaseManager
 import com.phoenix.remotedbclient.data.repository.ConnectionRepository
+import com.phoenix.remotedbclient.driver.DatabaseDialect
+import com.phoenix.remotedbclient.driver.DriverRegistry
 import com.phoenix.remotedbclient.ui.common.UiText
-import com.phoenix.remotedbclient.util.SecurePreferences
+import com.phoenix.remotedbclient.util.PasswordStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,9 +29,12 @@ import javax.inject.Inject
  */
 data class AddEditUiState(
     val name: String = "",
-    val dbType: String = "MySQL",
+    // [改动前] 默认写死 dbType = "MySQL"、port = "3306"
+    // [改动后] 默认留空，由 ViewModel 从 DriverRegistry 的第一个方言初始化
+    // [原因] 新增数据库时不需要再改表单默认值
+    val dbType: String = "",
     val host: String = "",
-    val port: String = "3306",
+    val port: String = "",
     val username: String = "",
     val password: String = "",
     val defaultDatabase: String = "",
@@ -62,13 +67,22 @@ sealed class AddEditEvent {
 class AddEditConnectionViewModel @Inject constructor(
     private val repository: ConnectionRepository,
     private val remoteDatabaseManager: RemoteDatabaseManager,
-    private val securePreferences: SecurePreferences,
+    private val securePreferences: PasswordStore,
+    private val driverRegistry: DriverRegistry,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val editConfigId: Long? = savedStateHandle.get<Long>("configId")?.takeIf { it > 0 }
 
-    private val _uiState = MutableStateFlow(AddEditUiState())
+    /** 可供数据库类型选择器使用的方言列表。 */
+    val dialects: List<DatabaseDialect> = driverRegistry.all()
+
+    private val _uiState = MutableStateFlow(
+        AddEditUiState(
+            dbType = dialects.firstOrNull()?.id.orEmpty(),
+            port = dialects.firstOrNull()?.defaultPort?.toString().orEmpty()
+        )
+    )
     val uiState: StateFlow<AddEditUiState> = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<AddEditEvent>()
@@ -83,7 +97,11 @@ class AddEditConnectionViewModel @Inject constructor(
     /** Update a single field in the form state. */
     fun updateName(value: String) { _uiState.value = _uiState.value.copy(name = value, nameError = null) }
     fun updateDbType(value: String) {
-        val defaultPort = if (value == "MySQL") "3306" else "5432"
+        // [改动前] 用 if (value == "MySQL") 决定 3306/5432
+        // [改动后] 从注册表查询方言默认端口，未知方言保持当前端口
+        // [原因] 端口规则属于方言，不应写死在表单 ViewModel 中
+        val defaultPort = driverRegistry.find(value)?.defaultPort?.toString()
+            ?: _uiState.value.port
         _uiState.value = _uiState.value.copy(dbType = value, port = defaultPort)
     }
     fun updateHost(value: String) { _uiState.value = _uiState.value.copy(host = value, hostError = null) }
@@ -219,7 +237,9 @@ class AddEditConnectionViewModel @Inject constructor(
             name = state.name.trim(),
             dbType = state.dbType,
             host = state.host.trim(),
-            port = state.port.toIntOrNull() ?: (if (state.dbType == "MySQL") 3306 else 5432),
+            port = state.port.toIntOrNull()
+                ?: driverRegistry.find(state.dbType)?.defaultPort
+                ?: 0,
             username = state.username.trim(),
             defaultDatabase = state.defaultDatabase.trim()
         )

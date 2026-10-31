@@ -5,6 +5,7 @@ import com.phoenix.remotedbclient.data.remote.SessionManager
 import com.phoenix.remotedbclient.data.repository.ConnectionRepository
 import com.phoenix.remotedbclient.testutil.FakeConnectionConfigDao
 import com.phoenix.remotedbclient.testutil.MainDispatcherRule
+import com.phoenix.remotedbclient.testutil.testDriverRegistry
 import com.phoenix.remotedbclient.ui.common.UiText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -30,7 +31,7 @@ class BrowserViewModelTest {
 
     private fun createViewModel(): BrowserViewModel {
         val repository = ConnectionRepository(FakeConnectionConfigDao())
-        return BrowserViewModel(repository, SessionManager())
+        return BrowserViewModel(repository, SessionManager(testDriverRegistry()))
     }
 
     @Test

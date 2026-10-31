@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.phoenix.remotedbclient.R
+import com.phoenix.remotedbclient.driver.DatabaseDialect
 
 /**
  * Screen for creating a new connection or editing an existing one.
@@ -116,6 +117,7 @@ fun AddEditConnectionScreen(
             // Database Type dropdown
             DatabaseTypeDropdown(
                 selectedType = uiState.dbType,
+                dialects = viewModel.dialects,
                 onTypeSelected = viewModel::updateDbType,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -232,18 +234,19 @@ fun AddEditConnectionScreen(
 }
 
 /**
- * Segmented button-style selector for database type (MySQL / PostgreSQL).
+ * Segmented button-style selector for database types supplied by the driver registry.
+ *
+ * [改动前] 选项固定为 MySQL / PostgreSQL，名称来自 strings.xml
+ * [改动后] 选项来自 DriverRegistry，显示各方言的 displayName
+ * [原因] 新增驱动后无需再改这里，数据库类型列表自动出现
  */
 @Composable
 private fun DatabaseTypeDropdown(
     selectedType: String,
+    dialects: List<DatabaseDialect>,
     onTypeSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val options = listOf(
-        "MySQL" to R.string.db_type_mysql,
-        "PostgreSQL" to R.string.db_type_postgresql
-    )
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.database_type),
@@ -252,14 +255,14 @@ private fun DatabaseTypeDropdown(
             modifier = Modifier.padding(bottom = 4.dp)
         )
         Row(modifier = Modifier.fillMaxWidth()) {
-            options.forEach { (value, labelRes) ->
+            dialects.forEach { dialect ->
                 OutlinedButton(
-                    onClick = { onTypeSelected(value) },
+                    onClick = { onTypeSelected(dialect.id) },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        stringResource(labelRes),
-                        color = if (selectedType == value)
+                        dialect.displayName,
+                        color = if (selectedType == dialect.id)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.onSurface

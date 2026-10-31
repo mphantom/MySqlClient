@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.phoenix.remotedbclient.R
+import com.phoenix.remotedbclient.driver.QueryResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -237,12 +238,15 @@ fun QueryScreen(
             } else if (uiState.queryResult != null) {
                 val result = uiState.queryResult!!
                 if (result.errorMessage != null) {
+                    // [改动前] 依赖智能转换把 String? 直接传给 Text；模型跨模块后不再成立
+                    // [改动后] 用 orEmpty() 显式转成 String
+                    // [原因] 分支内已确认非空，实际展示文案不变
                     Box(
                         modifier = Modifier.fillMaxWidth().weight(0.5f).padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            result.errorMessage,
+                            result.errorMessage.orEmpty(),
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodyMedium
                         )
@@ -362,7 +366,7 @@ private fun QueryResultTable(
  *
  * @return The exported [File], or null on failure.
  */
-private suspend fun exportToCsv(context: Context, result: com.phoenix.remotedbclient.data.remote.QueryResult): File? {
+private suspend fun exportToCsv(context: Context, result: QueryResult): File? {
     return withContext(Dispatchers.IO) {
         try {
             val file = File(context.cacheDir, "query_export_${System.currentTimeMillis()}.csv")
