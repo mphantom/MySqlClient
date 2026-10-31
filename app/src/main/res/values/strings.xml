@@ -1,47 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MySqlClient</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">RemoteDB Explorer</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="table">数据表</string>
-    <string name="tablename">表名</string>
-    <string name="view">视图</string>
-    <string name="ssh">ssh连接</string>
-    <string name="functions">函数</string>
-    <string name="trigger">触发器</string>
-    <string name="setting">设置</string>
-    <string name="home">主页</string>
-    <string name="nick">昵称</string>
-    <string name="confirm">确定</string>
-    <string name="host">主机</string>
-    <string name="port">端口</string>
-    <string name="database">数据库</string>
-    <string name="user">用户名</string>
-    <string name="password">密码</string>
-    <string name="title_activity_table">TableActivity</string>
-    <string name="title_activity_test">TestActivity</string>
-    <string name="consule">控制台</string>
-    <string name="submit">提交</string>
-    <string name="file">字段名</string>
-    <string name="type">类型</string>
-    <string name="default_value">缺省值</string>
-    <string name="primary_key">主键</string>
-    <string name="auto_increment">自增</string>
-    <string name="not_null">不可为空</string>
-    <string name="event">事件</string>
-    <string name="time">时间</string>
-    <string name="statement">事务</string>
-    <string name="functionInfo">函数内容</string>
-    <string name="viewInfo">视图详情</string>
-    <string name="connection_fail">连接数据库失败</string>
-    <string name="connection_success">连接数据库成功</string>
-    <string name="connection_first">你还未连接数据库，请先连接数据库</string>
-    <string name="create_trigger_fails">触发器创建失败</string>
-    <string name="create_Function_fails">函数创建失败</string>
-    <string name="create_View_fails">视图创建失败</string>
-    <string name="filter">筛选</string>
-    <string name="condition">条件</string>
-    <string name="ssh_connection_success">ssh连接成功</string>
-    <string name="ssh_connection_fauli">ssh连接失败</string>
-    <string name="error_sql">数据库操作错误</string>
+    <!-- Connection Screen -->
+    <string name="connection_list_title">RemoteDB Explorer</string>
+    <string name="add_connection">Add Connection</string>
+    <string name="edit_connection">Edit Connection</string>
+    <string name="connection_name">Connection Name</string>
+    <string name="database_type">Database Type</string>
+    <string name="host_address">Host Address</string>
+    <string name="port">Port</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="default_database">Default Database (optional)</string>
+    <string name="test_connection">Test Connection</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="no_connections">No saved connections.\nTap + to add one.</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="connect">Connect</string>
+    <string name="connection_test_success">Connection successful!</string>
+    <string name="connection_test_failed">Connection failed: %s</string>
+    <string name="delete_confirm_title">Delete Connection</string>
+    <string name="delete_confirm_message">Delete "%s"? This cannot be undone.</string>
+
+    <!-- Browser Screen -->
+    <string name="tables">Tables</string>
+    <string name="views">Views</string>
+    <string name="no_tables">No tables found</string>
+    <string name="columns">Columns</string>
+    <string name="data">Data</string>
+    <string name="refresh">Refresh</string>
+    <string name="add_row">Add Row</string>
+    <string name="column_name">Name</string>
+    <string name="column_type">Type</string>
+    <string name="primary_key">PK</string>
+    <string name="nullable">Nullable</string>
+    <string name="add_row_title">Add New Row</string>
+    <string name="edit_cell_title">Edit Cell</string>
+    <string name="delete_row_title">Delete Row</string>
+    <string name="delete_row_message">Delete this row? This action cannot be undone.</string>
+
+    <!-- Query Screen -->
+    <string name="sql_query">SQL Query</string>
+    <string name="execute">Execute</string>
+    <string name="query_history">History</string>
+    <string name="rows_affected">%d row(s) affected</string>
+    <string name="no_results">No results</string>
+    <string name="export_csv">Export CSV</string>
+
+    <!-- Main Screen -->
+    <string name="browse">Browse</string>
+    <string name="query">Query</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="no_active_connections">No active connections</string>
+
+    <!-- Errors -->
+    <string name="error_connection_failed">Failed to connect: %s</string>
+    <string name="error_query_failed">Query failed: %s</string>
+    <string name="error_timeout">Connection timed out. Check the host and port.</string>
+    <string name="error_network">Network error. Check your internet connection.</string>
+    <string name="error_generic">An unexpected error occurred: %s</string>
+    <string name="error_field_required">%s is required</string>
+    <string name="error_invalid_port">Invalid port number</string>
 </resources>

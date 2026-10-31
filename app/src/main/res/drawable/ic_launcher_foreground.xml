@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Database cylinder icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,42 L34,66 C34,69.866 42.954,73 54,73 C65.046,73 74,69.866 74,66 L74,42 C74,45.866 65.046,49 54,49 C42.954,49 34,45.866 34,42 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.6"
+        android:pathData="M34,42 C34,38.134 42.954,35 54,35 C65.046,35 74,38.134 74,42 C74,45.866 65.046,49 54,49 C42.954,49 34,45.866 34,42 Z" />
+    <!-- Arrow pointing right (remote connection symbol) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M76,40 L90,46 L76,52 Z" />
+</vector>

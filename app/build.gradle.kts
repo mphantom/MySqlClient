@@ -1,279 +1,121 @@
 plugins {
     id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
-    kotlin("plugin.serialization") version Configuration.Versions.kotlin_version
-    id("kotlin-parcelize")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
-
-    // 编译 SDK 版本
-    compileSdkVersion(Configuration.AppConfigs.compile_sdk_version)
-    // 编译工具版本
-    buildToolsVersion(Configuration.AppConfigs.build_tools_version)
-
-    // 资源前缀
-    resourcePrefix("app")
+    namespace = "com.example.remotedbexplorer"
+    compileSdk = 34
 
     defaultConfig {
-        // 应用 id
-        applicationId = Configuration.AppConfigs.application_id
-
-        // 最低支持版本
-        minSdkVersion(Configuration.AppConfigs.min_sdk_version)
-        // 目标 SDK 版本
-        targetSdkVersion(Configuration.AppConfigs.target_sdk_version)
-
-        // 应用版本号
-        versionCode = Configuration.AppConfigs.version_code
-        // 应用版本名
-        versionName = Configuration.AppConfigs.version_name
+        applicationId = "com.example.remotedbexplorer"
+        minSdk = 26
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0.0"
+        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // 开启 Dex 分包
-        multiDexEnabled = true
-    }
-
-    signingConfigs {
-        // 签名配置
-        getByName("debug") {
-            keyAlias = Configuration.SigningConfigs.key_alias
-            keyPassword = Configuration.SigningConfigs.key_password
-            storeFile = file(Configuration.SigningConfigs.store_file)
-            storePassword = Configuration.SigningConfigs.store_password
-            isV1SigningEnabled = true
-            isV2SigningEnabled = true
-        }
-        create("release") {
-            keyAlias = Configuration.SigningConfigs.key_alias
-            keyPassword = Configuration.SigningConfigs.key_password
-            storeFile = file(Configuration.SigningConfigs.store_file)
-            storePassword = Configuration.SigningConfigs.store_password
-            isV1SigningEnabled = true
-            isV2SigningEnabled = true
+        vectorDrawables {
+            useSupportLibrary = true
         }
     }
 
     buildTypes {
-        getByName("debug") {
-            isMinifyEnabled = false
-            isShrinkResources = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-//            signingConfig = signingConfigs.findByName("debug")
-        }
-        getByName("release") {
+        release {
             isMinifyEnabled = true
-            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-//            signingConfig = signingConfigs.findByName("release")
         }
     }
 
-    // 维度
-    flavorDimensions("version")
-
-    productFlavors {
-        // 正式线上版本
-        create("online") {
-            setDimension("version")
-            // 版本名后缀
-            versionNameSuffix = "_online"
-            // 是否使用线上环境
-            buildConfigField("boolean", "IS_ONLINE_ENV", "true")
-        }
-
-        // 测试版本
-        create("offline") {
-            setDimension("version")
-            // 应用包名后缀
-            applicationIdSuffix = ".offline"
-            // 版本名后缀
-            versionNameSuffix = "_offline"
-            // 是否使用线上环境
-            buildConfigField("boolean", "IS_ONLINE_ENV", "false")
-        }
-
-        // 开发版本
-        create("dev") {
-            setDimension("version")
-            // 应用包名后缀
-            applicationIdSuffix = ".dev"
-            // 版本名后缀
-            versionNameSuffix = "_dev"
-            // 是否使用线上环境
-            buildConfigField("boolean", "IS_ONLINE_ENV", "false")
-        }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
-    // 源文件路径设置
-    sourceSets {
-        named("main") {
-            java.srcDirs("src/main/java", "src/main/kotlin")
-            jni.srcDirs("libs", "jniLibs")
-        }
-    }
-
-    // dex 配置
-    dexOptions {
-        jumboMode = true
-        dexInProcess = true
-        preDexLibraries = true
-        javaMaxHeapSize = "4g"
-        maxProcessCount = 6
-        keepRuntimeAnnotatedClasses = false
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
     buildFeatures {
-        // DataBinding 开启
-        dataBinding = true
+        compose = true
     }
 
-    lintOptions {
-        // 出现错误不终止编译
-        isAbortOnError = false
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
 
-    // 配置 APK 输出路径
-    applicationVariants.all {
-        outputs.all {
-            if (this is com.android.build.gradle.internal.api.ApkVariantOutputImpl) {
-                this.outputFileName = "sample_${flavorName}_${buildType.name}_v${versionName}.apk"
-            }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/NOTICE.md"
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/DEPENDENCIES"
+            excludes += "/META-INF/INDEX.LIST"
+            excludes += "/META-INF/*.SF"
+            excludes += "/META-INF/*.DSA"
+            excludes += "/META-INF/*.RSA"
+            // Exclude javax.xml classes from JDBC drivers to avoid conflicts
+            excludes += "**/javax/xml/**"
+            excludes += "**/org/w3c/dom/**"
+            // Pick the first LICENSE.txt (avoids duplicate)
+            pickFirsts += "META-INF/LICENSE.txt"
         }
-    }
-
-    // Java 版本配置
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    // kotlin Jvm 版本
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs += arrayOf("-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi")
-    }
-}
-
-kapt {
-    arguments {
-        arg("AROUTER_MODULE_NAME", project.getName())
     }
 }
 
 dependencies {
+    // Core Android
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
+    implementation("androidx.multidex:multidex:2.0.1")
 
-    // Kotlin
-    implementation(Configuration.Dependencies.kotlin_stdlib)
-    // 协程
-    implementation(Configuration.Dependencies.kotlin_coroutines)
-    // Json 序列化
-    implementation(Configuration.Dependencies.kotlin_serialization)
+    // Jetpack Compose BOM
+    implementation(platform("androidx.compose:compose-bom:2024.01.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.foundation:foundation")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // Dex 分包
-    implementation(Configuration.Dependencies.androidx_multidex)
+    // Navigation Compose
+    implementation("androidx.navigation:navigation-compose:2.7.6")
 
-    // v4
-    implementation(Configuration.Dependencies.androidx_legacy)
-    // v7
-    implementation(Configuration.Dependencies.androidx_appcompat)
-    // design
-    implementation(Configuration.Dependencies.androidx_material)
-    // RecyclerView
-    implementation(Configuration.Dependencies.androidx_recyclerview)
-    // 约束性布局
-    implementation(Configuration.Dependencies.androidx_constraint)
+    // Hilt DI
+    implementation("com.google.dagger:hilt-android:2.50")
+    ksp("com.google.dagger:hilt-android-compiler:2.50")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
-    // activity
-    implementation(Configuration.Dependencies.androidx_activity_ktx)
-    // fragment
-    implementation(Configuration.Dependencies.androidx_fragment_ktx)
+    // Room Database
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
 
-    // ktx
-    implementation(Configuration.Dependencies.androidx_core_ktx)
+    // Security - Encrypted SharedPreferences
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
-    // LifeCycle 拓展
-    implementation(Configuration.Dependencies.androidx_lifecycle_ktx)
-    implementation(Configuration.Dependencies.androidx_lifecycle_extensions)
-    // ViewModel 拓展
-    implementation(Configuration.Dependencies.androidx_lifecycle_viewmodel_ktx)
-    // LiveData 拓展
-    implementation(Configuration.Dependencies.androidx_lifecycle_livedata_ktx)
+    // JDBC Drivers
+    implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("org.postgresql:postgresql:42.6.0")
 
-    // viewpager2
-    implementation(Configuration.Dependencies.androidx_viewpager2)
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // Logger
-    implementation(Configuration.Dependencies.logger)
-
-    // Koin
-    implementation(Configuration.Dependencies.koin_scope)
-    implementation(Configuration.Dependencies.koin_viewmodel)
-    implementation(Configuration.Dependencies.koin_ext)
-
-    // LiveEventBus
-    implementation(Configuration.Dependencies.live_event_bus)
-
-    // OkHttp
-    implementation(Configuration.Dependencies.okhttp)
-
-    // Retrofit
-    implementation(Configuration.Dependencies.retrofit)
-    implementation(Configuration.Dependencies.retrofit_converter_kt)
-
-    // Glide
-    implementation(Configuration.Dependencies.coil)
-
-    // MMKV 数据存储
-    implementation(Configuration.Dependencies.tencent_mmkv)
-
-    implementation(Configuration.Dependencies.arouter_api)
-    kapt(Configuration.Dependencies.arouter_compiler)
-
-    // SmartRefreshLayout
-    implementation(Configuration.Dependencies.smart_refresh)
-    implementation(Configuration.Dependencies.smart_refresh_header_classics)
-    implementation(Configuration.Dependencies.smart_refresh_footer_classics)
-
-    // 状态栏工具
-    implementation(Configuration.Dependencies.immersion_bar)
-    implementation(Configuration.Dependencies.immersion_bar_ktx)
-
-    // 换肤
-    implementation(Configuration.Dependencies.skin_support)
-    implementation(Configuration.Dependencies.skin_support_appcompat)
-    implementation(Configuration.Dependencies.skin_support_material)
-    implementation(Configuration.Dependencies.skin_support_cardview)
-    implementation(Configuration.Dependencies.skin_support_constraint)
-
-    // Tablayout
-    implementation(Configuration.Dependencies.tablayout)
-
-    // 依赖 base 库
-    implementation(project(":lib_ui"))
-    implementation(project(":lib_databinding_adapter"))
-    implementation(project(":lib_okhttp_interceptor"))
-    implementation(project(":lib_recyclerview"))
-    implementation(project(":lib_views_custom"))
-    implementation(project(":lib_swipe_back"))
-
-    // 测试
-    testImplementation(Configuration.Dependencies.test_junit)
-    androidTestImplementation(Configuration.Dependencies.androidx_test_runner)
-    androidTestImplementation(Configuration.Dependencies.androidx_test_espresso_core)
-    androidTestImplementation(Configuration.Dependencies.androidx_test_ext_junit)
+    // Testing
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.01.00"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 }
-
-
-//    lintOptions {
-//        abortOnError false
-//        disable 'MissingTranslation'
-//    }
